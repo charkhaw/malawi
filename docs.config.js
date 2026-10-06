@@ -2,8 +2,8 @@
  * The documents this toolchain builds. Both scripts take the key as their
  * argument and default to the System Architecture:
  *
- *   node sync-toc.js [sa|pp|cs|cm]
- *   node build-docx.js [sa|pp|cs|cm]
+ *   node sync-toc.js [sa|pp|cs|cm|trc]
+ *   node build-docx.js [sa|pp|cs|cm|trc]
  *
  * pending   subsections that belong in the document but are not drafted yet.
  *           They are listed in the contents register and every build warns
@@ -54,6 +54,20 @@ module.exports = {
       "System Architecture": "sa",
       "Preliminary Project Plan": "pp",
       "Cybersecurity Risk Management Plan": "cs",
+    },
+  },
+  trc: {
+    dir: "compliance-checklist",
+    prefix: "TRC",
+    toc: "TRC-TOC.md",
+    title: "Technical Responsiveness Checklist",
+    out: "Technical-Responsiveness-Checklist.docx",
+    pending: [],
+    external: {
+      "System Architecture": "sa",
+      "Preliminary Project Plan": "pp",
+      "Cybersecurity Risk Management Plan": "cs",
+      "Change Management Plan": "cm",
     },
   },
 };
