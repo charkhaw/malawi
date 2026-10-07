@@ -23,7 +23,6 @@
 - 3.7 Reject detection and in-job reproduction
 - 3.8 Laser calibration and audit logging
 - 3.9 Machine software, job and batch reporting
-- 3.10 Technical data and installation requirements
 
 ### 4. Polycarbonate Card
 - 4.1 Construction and durability

@@ -23,9 +23,7 @@ module.exports = {
     toc: "05-TP-System-Architecture-TOC.md",
     title: "Technical Proposal - System Architecture",
     out: "Document-5-Technical-Proposal-System-Architecture.docx",
-    pending: [
-      { section: 3, after: "3.9", title: "3.10 Technical data and installation requirements" },
-    ],
+    pending: [],
     external: {},
   },
   pp: {
