@@ -26,6 +26,7 @@
 | OVMI | Optically Variable Magnetic Ink |
 | OWASP | Open Worldwide Application Security Project |
 | PKI | Public Key Infrastructure |
+| PoE | Power over Ethernet |
 | QR | Quick Response code |
 | RAID | Redundant Array of Independent Disks |
 | REST | Representational State Transfer |

@@ -275,6 +275,30 @@ function buildTable(rows) {
   }
   const sum = weights.reduce((a, b) => a + b, 0);
   const widths = weights.map((w) => Math.round((w / sum) * CONTENT_DXA));
+
+  /* Widths in proportion to the text alone squeeze a short column, such as an
+     ID or a clause number, beside a long one until its words break mid-word.
+     So no column is made narrower than its longest word, and the width it
+     needs is taken from the columns that have room to spare. */
+  const minWidths = [];
+  for (let c = 0; c < cols; c++) {
+    let longest = 0;
+    for (const r of [header, ...body]) {
+      for (const word of (r[c] || "").replace(/\*\*/g, "").split(/\s+/)) {
+        longest = Math.max(longest, word.length);
+      }
+    }
+    minWidths.push(Math.min(longest * 110 + 240, Math.round(CONTENT_DXA * 0.4)));
+  }
+  const deficit = widths.reduce((d, w, c) => d + Math.max(0, minWidths[c] - w), 0);
+  const slack = widths.reduce((s, w, c) => s + Math.max(0, w - minWidths[c]), 0);
+  if (deficit > 0 && slack > deficit) {
+    for (let c = 0; c < cols; c++) {
+      widths[c] = widths[c] < minWidths[c]
+        ? minWidths[c]
+        : widths[c] - Math.round(((widths[c] - minWidths[c]) / slack) * deficit);
+    }
+  }
   widths[cols - 1] += CONTENT_DXA - widths.reduce((a, b) => a + b, 0);
 
   const cell = (text, i, isHeader) => new TableCell({

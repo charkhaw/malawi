@@ -1,5 +1,7 @@
 // Figure 10.1, Card signing.
-const F = require("./figlib.js")(1180, 915, 17);
+// 7 October 2026: one hardware security module at each site; the key is replicated to the module at
+// the secondary site, which signs if the module at the primary site is unavailable.
+const F = require("./figlib.js")(1460, 915, 17);
 
 // Certification authority, outside the facility
 F.box(740, 20, 320, 100, [], "double");
@@ -17,12 +19,17 @@ F.box(70, 290, 230, 90, ["Data Preparation", "Service"]);
 F.box(420, 290, 220, 90, ["Signing Service"]);
 
 F.box(780, 270, 280, 270, [], "light");
-F.text(920, 296, ["Hardware security", "module pair"], { weight: 700 });
-F.box(800, 350, 100, 56, ["Module 1"], "grey", { size: 16 });
-F.box(940, 350, 100, 56, ["Module 2"], "grey", { size: 16 });
-F.line([[900, 378], [940, 378]], { start: true, end: true });
-F.label(920, 432, ["Key replicated over the", "modules' protected channel"], "middle", { size: 14 });
-F.label(920, 492, ["Document Signer private key:", "generated inside, never extracted"]);
+F.text(920, 296, ["Hardware security", "module, primary site"], { weight: 700 });
+F.box(850, 350, 140, 56, ["Module 1"], "grey", { size: 16 });
+F.label(920, 470, ["Document Signer private key:", "generated inside, never extracted"]);
+
+// Secondary environment
+F.box(1130, 250, 310, 310, [], "double");
+F.text(1285, 278, ["SECONDARY ENVIRONMENT"], { size: 14, weight: 700, spacing: 1 });
+F.box(1215, 350, 140, 56, ["Module 2"], "grey", { size: 16 });
+F.line([[990, 378], [1215, 378]], { end: true });
+F.label(1285, 448, ["Key replicated over the", "modules' protected channel,", "encrypted between the sites"], "middle", { size: 14 });
+F.label(1285, 518, ["Signs if module 1", "is unavailable"], "middle", { size: 14 });
 
 F.line([[300, 320], [420, 320]], { end: true });
 F.label(360, 294, ["QR payload"]);
@@ -58,7 +65,7 @@ F.line([[740, 70], [530, 70], [530, 290]], { end: true, width: 4 });
 F.label(735, 52, ["Once per certificate: Document Signer certificate"], "end");
 
 // Legend
-F.box(20, 730, 1080, 165, [], "solid");
+F.box(20, 730, 1420, 165, [], "solid");
 F.text(38, 752, ["Legend"], { size: 16, anchor: "start", weight: 700 });
 [[38, 770, "solid", "Software supplied under this contract"],
  [560, 770, "grey", "Hardware supplied under this contract"],

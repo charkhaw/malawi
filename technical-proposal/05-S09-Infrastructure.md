@@ -28,7 +28,7 @@ data at several million entries per day, retained for ten years and compressed a
 approximately 4 terabytes. Machine telemetry, reporting and working space add approximately 1
 terabyte, for approximately 5 terabytes derived.
 
-The platform provides **not less than 20 terabytes usable at Operational Acceptance**, more than three
+The platform provides **not less than 20 terabytes usable after RAID at Operational Acceptance**, more than three
 times the derived figure, so that several years of the 15 percent annual growth are absorbed within the
 initial provision. Raw capacity is provisioned above that, because part of it holds the parity that
 protects the data on the storage array against drive failure. Growth beyond the initial provision is
@@ -52,9 +52,10 @@ chassis, and its total loss would stop every service at the primary site. That c
 the secondary environment described in Section 9.3, which carries the data and the application
 services until the array is restored.
 
-**Host derivation.** The primary site runs **four virtualization hosts** in two clusters. The
-application cluster of two hosts carries the integration, application, machine control, management
-and security virtual machines and the non-production environments, and each of its hosts is sized to run every
+**Host derivation.** The primary site runs **four virtualization hosts** in two clusters, each host
+with two processors of 24 cores and 256 GB of memory. The application cluster of two hosts carries
+the integration, application, machine control, management, directory, security and backup virtual
+machines and the non-production environments, and each of its hosts is sized to run every
 production virtual machine of the cluster on its own. The database cluster of two hosts carries the
 two database nodes, one on each host, so that the database has processor, memory and storage paths of
 its own and never contends with the application workload. When a host in either cluster is lost, or
@@ -65,14 +66,15 @@ the non-production environments are the first workloads stopped to make room for
 
 | Element | Quantity | Role |
 |---|---|---|
-| Application hosts | 2 | Application cluster with automated failover over the storage array, carrying the integration, application, machine control, management and security virtual machines and the non-production environments, each sized to run every production virtual machine of the cluster alone |
-| Database hosts | 2 | Database cluster over the storage array, one database node on each host |
-| Storage array | 1 | Holds the virtual machines and their data, not less than 20 TB usable, with dual controllers, redundant power and solid-state drives in a protected pool |
-| Immutable backup storage | 1 | Not less than 40 TB usable, covering retention cycles, with copies that no administrator can alter or delete before their retention ends |
-| Core switches | 2 | Redundant pair carrying the zone VLANs and the storage network |
-| Access switches | 2 | Machine Control Zone, each serving one personalization line and one mailing line, physically separate from the core pair |
+| Application hosts | 2 | Two processors of 24 cores and 256 GB of memory each. Application cluster with automated failover over the storage array, carrying the integration, application, machine control, management, directory, security and backup virtual machines and the non-production environments, each sized to run every production virtual machine of the cluster alone |
+| Database hosts | 2 | Two processors of 24 cores and 256 GB of memory each. Database cluster over the storage array, one database node on each host |
+| Storage array | 1 | Holds the virtual machines and their data, not less than 20 TB usable after RAID, with dual controllers, redundant power and solid-state drives in a protected pool |
+| Backup repository | 1 | Encrypted, managed by Veeam Backup & Replication, holding the restore points used for routine restoration |
+| Immutable backup storage | 1 | Not less than 40 TB usable, encrypted, covering retention cycles, with copies that no administrator can alter or delete before their retention ends |
+| Core switches | 2 | Layer 3, redundant pair carrying the zone VLANs, including the Storage Zone |
+| Edge switches | 3 | Managed and non-PoE, in one stack, connecting the operator and administrative workstations in the User Network, the personalization and mailing lines in the Machine Control Zone, and the management interfaces in the Management Network, to the core pair |
 | Next generation firewalls | 2 | High availability pair, providing zone policy and intrusion detection and prevention |
-| Hardware security modules | 2 | High availability pair, described in Section 10.4 |
+| Hardware security module | 1 | Holds the Document Signer key, replicated to a second module at the secondary site, as described in Section 10.4 |
 | Operator and administrative workstations | 10 | Client devices for the consoles described below |
 
 **The storage network is specified, not assumed.** Every read and write of every virtual machine
@@ -84,7 +86,8 @@ switch ports that carry them, are provisioned accordingly. Under-specifying them
 such a deployment performs poorly while appearing correctly built.
 
 **Platform integrity.** Secure boot is enabled on the virtualization hosts, on every virtual
-machine, on the immutable backup storage and on the operator and administrative workstations, so
+machine, on the backup repositories and the immutable backup storage, and on the operator and
+administrative workstations, so
 that firmware, boot loader and operating system kernel are verified against trusted signatures
 before the platform loads, and the network, storage and security devices load only firmware images
 signed by their manufacturer. The hardened configuration
@@ -116,9 +119,9 @@ within the network zone appropriate to its function:
 | Database | Clustered database, two nodes, one on each database host | Database Zone | 2 |
 | Printer control | Printer Control Service and the interface to the manufacturer's personalization control software, for both personalization lines | Machine Control Zone | 1 |
 | Management | Administration and Access Control, administrative access host, and the mail relay that sends alert emails | Management and Monitoring Zone | 1 |
-| Directory | Domain controller: the directory, authentication and name resolution for the estate, and its common time source. A second domain controller runs at the secondary site | Management and Monitoring Zone | 1 |
+| Directory | Domain controllers: the directory, authentication and name resolution for the estate, and its common time source. The two run on different application hosts and replicate to each other, and a third runs at the secondary site | Management and Monitoring Zone | 2 |
 | Security monitoring | Security information and event management, log aggregation, endpoint management | Management and Monitoring Zone | 1 |
-| Backup management | Backup scheduling, cataloging and restoration | Management and Monitoring Zone | 1 |
+| Backup server | Veeam Backup & Replication: backup scheduling, cataloging, replication to the secondary site and restoration | Backup Zone | 1 |
 
 **Both application servers are active.** Application and administrative traffic is load balanced
 across the two application server instances, which the cluster keeps on different application hosts.
@@ -155,16 +158,20 @@ Network connection.
 
 | Element | Quantity | Role |
 |---|---|---|
-| Virtualization host | 1 | The secondary copy of the database, kept current by database replication; a domain controller, kept current by directory replication; and standby copies, one of each, of the integration gateway, application server, management, security monitoring and backup management virtual machines, kept current by virtual machine replication |
-| Storage array | 1 | Holds the secondary copy of the database and the standby virtual machines, not less than 20 TB usable |
-| Immutable backup storage | 1 | The offsite copy of the backups, not less than 40 TB usable |
-| Next generation firewall | 1 | Zone policy and intrusion prevention for the secondary environment |
-| Switch | 1 | The secondary environment's network |
+| Virtualization host | 1 | Standalone, with the same processors and memory as the primary hosts, and internal storage of not less than 20 TB usable after RAID. It runs 7 virtual machines: the secondary copy of the database, kept current by database replication; a domain controller, kept current by directory replication; and standby copies, one of each, of the integration gateway, application server, management, security monitoring and backup server virtual machines, kept current by virtual machine replication |
+| Backup repository | 1 | Encrypted, receiving the backup copies replicated from the primary site |
+| Immutable backup storage | 1 | The offsite copy of the backups, not less than 40 TB usable, encrypted |
+| Next generation firewall | 1 | Standalone, providing zone policy and intrusion prevention for the secondary environment |
+| Core switch | 1 | Layer 3, standalone, carrying the secondary environment's network. No separate edge switches are needed at this site |
+| Hardware security module | 1 | Replicated from the module at the primary site, as described in Section 10.4 |
 
 The secondary site carries no personalization or mailing equipment and no machine control instances,
 because there is no equipment there to control. A single host is sufficient because high availability
 is required of the production system rather than of its standby: the standby is needed when the
-primary storage or the primary site is lost, and its own loss does not affect production.
+primary storage or the primary site is lost, and its own loss does not affect production. For the
+same reason its virtual machines are held on the host's internal storage rather than on a storage
+array. A shared array earns its place by letting clustered hosts reach the same disks, and a single
+standby host has no other host to share them with.
 
 **Non-production environments.** Three environments are provided in addition to production:
 
@@ -175,9 +182,10 @@ primary storage or the primary site is lost, and its own loss does not affect pr
 | User acceptance testing | Purchaser validation of workflows, functions and reporting |
 
 These run on two virtual machines on the hosts of the application cluster: one for development, and
-one shared by training and user acceptance testing, which run the same released version. They sit
-on their own network segment behind the firewall pair, isolated from every production zone as
-described in Section 9.2. Running them on the
+one shared by training and user acceptance testing, which run the same released version. With them,
+the primary site runs 14 virtual machines: the 12 production virtual machines in the inventory above
+and these 2. They sit on a segment of their own within the Application Zone, which the firewall pair
+separates from every production service, as described in Section 9.2. Running them on the
 production platform keeps them on the same software and versions as production and under the same
 physical controls, without further hardware. They are the first workloads stopped when a host is
 lost, so that production keeps its full capacity.
@@ -202,67 +210,80 @@ telemetry, and mailing and dispatch data. These are held in one platform under o
 retention regime, so that a card can be traced across all of them without correlating separate
 stores.
 
-Final component specifications, including the drive configuration of the storage array and the
-resulting raw capacity, are confirmed during detailed design against the approved data volumes and
+Final component specifications, including the drive configuration of the storage array and of the
+secondary host, the resulting raw capacity, and the capacity of the backup repositories, are
+confirmed during detailed design against the approved data volumes, the backup retention policy and
 the layout of the allocated room.
 
 ## 9.2 Network architecture and security zoning
 
-The network is divided into segregated zones. Traffic between zones passes through firewall policy,
-and no zone is reachable from another by default.
+The network is divided into ten segregated zones, each a separate VLAN. Traffic between zones passes
+through firewall policy, and no zone is reachable from another by default.
 
-| Zone | Contents |
-|---|---|
-| External Integration Zone | The interface to NRIS and to external services |
-| DMZ | Provisioned for externally exposed services. No service is deployed there at go-live |
-| Application Zone | The application services described in Section 6 |
-| Database Zone | The database nodes |
-| Machine Control Zone | The personalization and mailing lines and their control systems |
-| Management and Monitoring Zone | Administration, monitoring, logging and backup infrastructure, and the security services: security information and event management, endpoint management and privileged access management |
+| VLAN | Zone | Contents |
+|---|---|---|
+| 10 | Management Network | The management interfaces of the hosts, the storage array, the switches, the firewalls, the hardware security module and the backup storage, reached from the administrative access host |
+| 20 | User Network | The operator and administrative workstations, connected through the edge switch stack |
+| 30 | Machine Control Zone | The personalization and mailing lines and their control systems, connected through the edge switch stack |
+| 40 | Application Zone | The application services described in Section 6, including the Signing Service, and, on segments of their own, the hardware security module and the non-production environments |
+| 50 | Database Zone | The database nodes |
+| 60 | External Integration Zone | The interface to NRIS and to external services |
+| 70 | Storage Zone | The traffic between the virtualization hosts and the storage array, and nothing else |
+| 80 | Backup Zone | The backup server, the backup repository, the immutable backup storage and the backup traffic |
+| 90 | Management and Monitoring Zone | Administration, the directory, monitoring and logging, and the security services: security information and event management, endpoint management and privileged access management |
+| 100 | DMZ | Reserved for a reverse proxy, application programming interfaces and other approved external-access services. No service is deployed there at go-live |
 
 The External Integration, Application, Database and Machine Control Zones are the production zones.
-The Management and Monitoring Zone is the management and security zone, and the DMZ is reserved for
-externally exposed services.
+The User Network holds the people who use the System. The Management Network, the Storage Zone and
+the Backup Zone carry the infrastructure, the Management and Monitoring Zone is the management and
+security zone, and the DMZ is reserved for externally exposed services.
 
-Each zone is a separate VLAN, and traffic between zones is routed only through the firewall pair,
-which applies the zone policy and intrusion prevention. Communications are encrypted in transit as
+Traffic between zones is routed only through the firewall pair, which applies the zone policy and
+intrusion prevention, and the Storage Zone is not routed at all. Communications are encrypted in transit as
 described in Section 10.2, and replication and backup copies between the primary and secondary
 sites cross the Government Wide Area Network inside an encrypted tunnel between the firewalls at
 each site.
 
 ![Network zones](../images/Figure-9-1-Network-Zones.png)
 
-*Figure 9.1: Network zones. Every path between zones passes through the firewall pair. Double
-borders are provided by the Purchaser; shaded boxes are hardware.*
+*Figure 9.1: Network zones. Ten zones, each a VLAN, with every routed path between them passing
+through the firewall pair. Double borders are provided by the Purchaser; shaded boxes are hardware.*
 
 **Why the Machine Control Zone is separated.** The personalization and mailing lines run industrial
 control systems with their own lifecycle, patched to the equipment manufacturer's schedule rather
 than to the operating system vendor's. Placing them in their own zone means that constraint does not
 set the patching posture of the rest of the estate, and that a compromise elsewhere does not reach
-the equipment that produces identity documents. The lines connect to two access switches
-of their own rather than to the core pair, each serving one personalization line and one mailing
-line, so the equipment is separated physically as well as logically, and the loss of a switch takes
-one pair of lines out of production rather than all four.
+the equipment that produces identity documents. The lines connect to the edge switch stack on ports
+assigned to the Machine Control Zone, which reach the other zones only through the firewall pair.
+Personalization line 1 and mailing line 1 connect to one switch of the stack and the lines numbered
+2 to another, so the loss of a switch takes one pair of lines out of production rather than all four.
 
 **Why the Database Zone is separated from the Application Zone.** The application services are the
 components that talk to other systems and therefore the components most exposed. Requiring traffic
 to the database to cross a policy boundary means that reaching an application service does not by
 itself yield the identity data behind it.
 
-**The storage network is carried separately.** Traffic between the virtualization hosts and the
-storage array is placed on its own network segment rather than sharing the zone VLANs, so that
-storage traffic and application traffic do not compete, and so that the storage array is not
-reachable from the service zones.
+**The Storage Zone is carried separately.** Traffic between the virtualization hosts and the storage
+array is placed in a zone of its own, which is not routed, so that storage traffic and application
+traffic do not compete, and so that the storage array is not reachable from the service zones.
+
+**Backup traffic has a zone of its own.** Backups move large volumes of data, and the copies they
+make are what recovery from an attack depends on. The Backup Zone keeps that traffic off the
+production zones, and the backup server reaches the systems it protects only through firewall rules
+that permit backup traffic and nothing else, as described in Section 12.3.
 
 **Workstations, administration and the signing modules.** The workstations listed in Section 9.1 sit
-on their own segment and reach the application services only through firewall policy. Administration
-of any zone passes through the administrative access host in the Management and Monitoring Zone, so
-no workstation holds a direct administrative path to a server in normal operation. The out-of-band
-management interfaces of the hosts, the storage array and the network and security devices sit on a
-separate management segment, reached from the system administration workstations under a recorded
-break-glass procedure when the administrative access host is itself unavailable. The hardware security modules sit on a
-segment of the Application Zone that only the Signing Service can reach, so the boundary described in
-Section 10.1 is enforced by the network as well as by the credentials.
+in the User Network, connected through the stack of three edge switches, and reach the application
+services only through firewall policy. Administration of any zone passes through the administrative
+access host in the Management and Monitoring Zone, so no workstation holds a direct administrative
+path to a server in normal operation. The out-of-band management interfaces of the hosts, the storage
+array and the network and security devices sit in the Management Network, reached from the system
+administration workstations under a recorded break-glass procedure when the administrative access
+host is itself unavailable. The hardware security module at the primary site sits on a segment of the
+Application Zone that only the Signing Service can reach, and the module at the secondary site on the
+corresponding segment there, reachable from the Signing Service only through the encrypted tunnel
+between the sites. The boundary described in Section 10.1 is therefore enforced by the network as
+well as by the credentials.
 
 **Facility systems.** The physical access control, intrusion detection, environmental sensors and
 uninterruptible power supplies installed under the facility works run on a network of their own,
@@ -272,8 +293,8 @@ that exchange with the Management and Monitoring Zone, so that no facility devic
 production zone.
 
 **The non-production segment.** The development, training and user acceptance testing environments
-sit on their own segment behind the firewall pair, isolated from every production zone, and hold
-masked data only. A fault induced in training, or an untested change in development, cannot reach
+sit on a segment of their own within the Application Zone, which the firewall pair separates from
+every production service, and hold masked data only. A fault induced in training, or an untested change in development, cannot reach
 production.
 
 **Wide area connectivity.** Connectivity between the Card Production Facility, NRIS, the secondary
@@ -298,10 +319,12 @@ of the application cluster, the two database nodes run on the two hosts of the d
 every host reaches the storage array through both of its controllers, and printing jobs are
 distributed across available
 lines by the Card Personalization Management System described in Section 6.2. The failure of a
-line, an access switch, a host, a database node, a storage controller, a core switch, a firewall or
-a hardware security module reduces throughput, or pauses it for the failover window, rather than
-stopping production. The loss of the storage array as a whole is the exception, and is covered by
-the secondary environment.
+line, an edge switch, a host, a database node, a storage controller, a core switch or a firewall
+reduces throughput, or pauses it for the failover window, rather than stopping production. Nor does
+the failure of the hardware security module at the primary site: the Signing Service then signs
+through the replicated module at the secondary site, over the encrypted connection between the
+sites, until the module is replaced. The loss of the storage array as a whole is the exception, and
+is covered by the secondary environment.
 
 | Measure | Target |
 |---|---|
@@ -332,15 +355,17 @@ disaster recovery facility is constructed under this Contract, and the renovatio
 to the primary site.
 
 The secondary environment is functional and operational at Operational Acceptance, as a warm
-standby. It holds a running replicated copy of the production database, standby copies of the
-service virtual machines kept current by replication and started on failover, and the offsite backup
-copies, so that recovery does not depend on rebuilding from installation media.
+standby. On the internal storage of its single host it holds a running replicated copy of the
+production database, a running domain controller, and standby copies of the service virtual
+machines kept current by replication and started on failover. Beside the host are the offsite
+backup copies and the replicated hardware security module. Recovery therefore does not depend on
+rebuilding from installation media.
 
 | Element | Provision |
 |---|---|
 | Primary environment | The production estate at the Card Production Facility |
 | Secondary environment | Deployed into the Purchaser's existing disaster recovery data center |
-| Backup replication | Replication of the backups of databases, configuration, application systems and audit logs to the immutable backup storage at the secondary site |
+| Backup replication | Encrypted replication by Veeam Backup & Replication of the backups of databases, configuration, application systems and audit logs to the backup repository and the immutable backup storage at the secondary site |
 | Offsite backup storage | Encrypted, immutable backup copies held away from the primary site |
 | Synchronization | Replication of the production database within the lag stated above |
 
@@ -350,8 +375,10 @@ copies, so that recovery does not depend on rebuilding from installation media.
 Purchaser; shaded boxes are hardware.*
 
 **What the secondary environment does and does not cover.** It carries the data and the application
-services. It does not carry personalization or mailing equipment, or the machine control and signing
-services that drive them, which exist only at the Card Production Facility. A loss of the primary
+services, and its hardware security module holds the Document Signer key, so that production can
+resume after the loss of the primary site without waiting for a new certificate. It does not carry
+personalization or mailing equipment, or the machine control and signing services that drive them,
+which exist only at the Card Production Facility. A loss of the primary
 storage or of the primary site therefore preserves the record of every card produced and every card
 in progress and keeps those records available to NRIS and to reporting, and production resumes when
 the production platform, and after a site loss the equipment, is available again.
@@ -376,19 +403,20 @@ delivered under the facility works.
 
 | Item | Quantity | Specification |
 |---|---|---|
-| Application hosts, primary site | 2 | Enterprise rack servers, redundant power, redundant paths to both controllers of the storage array with multipath, clustered with automated failover, each sized to run every production virtual machine of the application cluster alone, and carrying the non-production environments |
-| Database hosts, primary site | 2 | Enterprise rack servers, redundant power, redundant paths to both controllers of the storage array with multipath, clustered, one database node on each |
-| Storage array, primary site | 1 | Enterprise storage array, dual controllers with non-disruptive failover, redundant power, solid-state drives in a protected pool, RAID 6 or the manufacturer's equivalent, encryption at rest, not less than 20 TB usable |
-| Immutable backup storage, primary site | 1 | Not less than 40 TB usable, with retention that no administrator can override |
-| Virtualization host, secondary site | 1 | Standby service virtual machines and the secondary copy of the database at the Purchaser's disaster recovery data center |
-| Storage array, secondary site | 1 | Enterprise storage array, encryption at rest, not less than 20 TB usable |
-| Immutable backup storage, secondary site | 1 | The offsite copy of the backups, not less than 40 TB usable |
-| Core switches | 2 | Redundant pair, zone VLANs and the storage network |
-| Access switches | 2 | Machine Control Zone, each serving one personalization line and one mailing line |
+| Application hosts, primary site | 2 | Enterprise rack servers, two processors of 24 cores and 256 GB of memory each, redundant power, redundant paths to both controllers of the storage array with multipath, clustered with automated failover, each sized to run every production virtual machine of the application cluster alone, and carrying the non-production environments |
+| Database hosts, primary site | 2 | Enterprise rack servers, two processors of 24 cores and 256 GB of memory each, redundant power, redundant paths to both controllers of the storage array with multipath, clustered, one database node on each |
+| Storage array, primary site | 1 | Enterprise storage array, dual controllers with non-disruptive failover, redundant power, solid-state drives in a protected pool, RAID 6 or the manufacturer's equivalent, encryption at rest, not less than 20 TB usable after RAID |
+| Backup repository, primary site | 1 | Encrypted, managed by Veeam Backup & Replication |
+| Immutable backup storage, primary site | 1 | Not less than 40 TB usable, encrypted, with retention that no administrator can override |
+| Virtualization host, secondary site | 1 | Standalone enterprise rack server, two processors of 24 cores and 256 GB of memory, redundant power, internal storage of not less than 20 TB usable after RAID, running the 7 virtual machines of the secondary environment at the Purchaser's disaster recovery data center |
+| Backup repository, secondary site | 1 | Encrypted, receiving the backup copies replicated from the primary site |
+| Immutable backup storage, secondary site | 1 | The offsite copy of the backups, not less than 40 TB usable, encrypted |
+| Core switches, primary site | 2 | Layer 3, redundant pair, carrying the zone VLANs, including the Storage Zone |
+| Edge switches, primary site | 3 | Managed, non-PoE, stacked, for the User Network, the Machine Control Zone and the Management Network |
 | Next generation firewalls, primary site | 2 | High availability pair, with intrusion detection and prevention |
-| Next generation firewall, secondary site | 1 | Zone policy and intrusion prevention for the secondary environment |
-| Switch, secondary site | 1 | The secondary environment's network |
-| Hardware security modules | 2 | High availability pair, FIPS 140-2 or FIPS 140-3 validated |
+| Next generation firewall, secondary site | 1 | Standalone, with zone policy and intrusion prevention for the secondary environment |
+| Core switch, secondary site | 1 | Layer 3, standalone, carrying the secondary environment's network |
+| Hardware security modules | 2 | One at each site, the module at the secondary site replicated from the module at the primary site, FIPS 140-2 or FIPS 140-3 validated |
 | Operator and administrative workstations | 10 | Client devices for the consoles listed in Section 9.1 |
 | Structured cabling and patching | As required by the approved room layout | Equipment room patching and connection of equipment to the network |
 
@@ -400,16 +428,16 @@ delivered under the facility works.
 | Virtual machine operating systems | All virtual machines |
 | Windows Server client access licenses | Every person holding an account on the System |
 | Workstation operating system | The operator and administrative workstations |
-| Backup storage operating system | The immutable backup storage at each site |
+| Backup storage operating system | The backup repository and the immutable backup storage at each site |
 | Database platform, SQL Server | The clustered database at the primary site and its secondary copy at the secondary site, with SQL Server Developer for the non-production environments |
-| Backup and recovery platform | All protected systems |
+| Backup and recovery platform, Veeam Backup & Replication | All protected systems at the primary site, with replication of the backups to the secondary site |
 | Security information and event management | All sources across the estate |
 | Endpoint detection and response | All servers, virtual machines and workstations |
 | Privileged access management | All administrative and privileged accounts |
 | Multi-factor authentication | All administrators and operators |
 | Vulnerability scanning | All hosts, virtual machines, network devices and workstations |
 | Next generation firewall security subscriptions | All three firewalls |
-| Storage array and network device support and firmware | Both storage arrays, all switches and all firewalls |
+| Storage array and network device support and firmware | The storage array, all switches and all firewalls |
 | Hardware security module client software and support | Both modules, and the Signing Service that reaches them |
 | Monitoring and log aggregation | All infrastructure and application sources |
 | SMS alert service | Subscription to a bulk SMS provider in Malawi for the delivery of alerts, for three years |
