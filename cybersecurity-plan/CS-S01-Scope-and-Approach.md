@@ -5,8 +5,8 @@
 This plan sets out the method statement, management strategies, implementation plans and innovations
 by which the cyber security risks of the Information System are managed, as required by PDS ITP
 11.2(j), and is the cybersecurity risk part of the plan evaluated under Category 3 of Section III.
-Together with the Change Management Plan, presented separately, it forms the Cybersecurity Risk and
-Change Management Plan referred to in the System Architecture.
+Together with the Change Management and Configuration Governance Plan, presented separately, it forms
+the Cybersecurity Risk and Change Management Plan referred to in the System Architecture.
 
 It covers the Information System at the Card Production Facility and in the secondary environment,
 from the Effective Date through the warranty period. The security controls themselves are described

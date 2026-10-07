@@ -71,7 +71,6 @@ module.exports = {
       "System Architecture": "sa",
       "Preliminary Project Plan": "pp",
       "Cybersecurity Risk Management Plan": "cs",
-      "Change Management Plan": "cm",
     },
   },
 };
