@@ -9,12 +9,12 @@ to remain licensed and supported.
 
 | Title | License metric | Quantity | Serves |
 |---|---|---|---|
-| Windows Server Datacenter | Per physical core, with every core licensed and not fewer than 16 core licenses per host | 5 hosts: 4 at the primary site and 1 at the secondary site | The server operating system and Hyper-V on every host, failover clustering of the application hosts and of the database hosts, and the Windows Server virtual machines those hosts run, including the domain controllers |
+| Windows Server Datacenter | Per physical core, with every core licensed and not fewer than 16 core licenses per host | 240 core licenses: 5 hosts of two 24-core processors, 4 at the primary site and 1 at the secondary site | The server operating system and Hyper-V on every host, failover clustering of the application hosts and of the database hosts, and the Windows Server virtual machines those hosts run, including the domain controllers |
 | Windows Server client access licenses | Per user | One for each person holding an account on the system | Access by users to the Windows Server estate |
 | SQL Server Standard | Per virtual core, not fewer than four per virtual machine, with Software Assurance | The virtual cores allocated to the active database node | The production database. The passive node at the primary site and the secondary copy at the secondary site are covered by the failover rights of Software Assurance |
 | SQL Server Developer | No license fee, for development and testing | The development, user acceptance testing and training environments | Non-production databases |
 | Windows desktop operating system | Per device, supplied with the workstation | 10 | The operator and administrative workstations |
-| Backup storage operating system | Per unit | 2, one at each site | The immutable backup storage at the primary and secondary sites |
+| Backup storage operating system | Per unit | 4, two at each site | The backup repository and the immutable backup storage at the primary and secondary sites |
 
 Every host carries Windows Server Datacenter, because the edition licenses an unlimited number of
 Windows Server virtual machines on the host it covers. Either application host runs every production
@@ -27,16 +27,16 @@ controller, the secondary copy of the database and standby copies of the service
 | Function | License metric | Quantity | Serves |
 |---|---|---|---|
 | Security information and event management | Event volume | The full event volume of the estate | Collection and correlation across all sources, and the Security Operations Center |
-| Endpoint detection and response | Per endpoint | 29: the 5 hosts; 14 virtual machines, being the 11 production and 2 non-production virtual machines at the primary site and the domain controller at the secondary site; and the 10 workstations | Endpoint protection and anti-malware |
+| Endpoint detection and response | Per endpoint | 31: the 5 hosts; 16 virtual machines, being the 12 production and 2 non-production virtual machines at the primary site, and the domain controller and the database copy at the secondary site; and the 10 workstations. The standby copies at the secondary site run only in place of the virtual machines they copy | Endpoint protection and anti-malware |
 | Privileged access management | Per privileged user | Every administrator and privileged account | Privileged access issued for a session and a purpose |
 | Multi-factor authentication | Per user | Every administrator and operator | Authentication of administrators and operators |
 | Vulnerability scanning | Per scanned asset | All hosts, virtual machines, network devices and workstations | Scheduled vulnerability scanning and compliance reporting |
 | Monitoring and log aggregation | Per monitored node | All infrastructure and application sources | Monitoring, alerting, ticket generation and log aggregation |
 | Bulk SMS service | Per message, in a three-year bundle | The alert volume of the estate over three years | Delivery of alerts by SMS to the NRB staff designated for each type of alert |
-| Backup and recovery | Per protected workload | 11, the production virtual machines at the primary site, with configuration and audit logs, replicated to the secondary site | Scheduled backup, immutable retention and restoration |
+| Backup and recovery, Veeam Backup & Replication | Per protected workload | 12, the production virtual machines at the primary site, with configuration and audit logs, replicated to the secondary site | Scheduled backup, immutable retention and restoration |
 | Next generation firewall security subscriptions | Per appliance | 3: the high availability pair at the primary site and the firewall at the secondary site | Intrusion prevention signatures and threat updates |
-| Storage array and network device support and firmware | Per device | The storage array, 4 switches and 2 firewalls at the primary site, and the storage array, 1 switch and 1 firewall at the secondary site | Manufacturer support, replacement and firmware updates |
-| Hardware security module support and client software | Per module | 2, the high availability pair | Firmware updates, and the client software through which the Signing Service reaches the modules |
+| Storage array and network device support and firmware | Per device | The storage array, 7 switches and 2 firewalls at the primary site, and 1 switch and 1 firewall at the secondary site | Manufacturer support, replacement and firmware updates |
+| Hardware security module support and client software | Per module | 2, one at each site | Firmware updates, and the client software through which the Signing Service reaches the modules |
 
 **Equipment software**, supplied by the equipment manufacturer:
 

@@ -25,7 +25,7 @@ output, and a phase that feeds the next is not closed until its output has been 
 | Personalization and mailing equipment | Manufacture, factory acceptance, installation and commissioning of two laser personalization systems and two mailing and dispatch systems | Equipment manufacturer, under Inkript |
 | Application software | Card Personalization Management System, Data Preparation Service, Signing Service, Printer Control Service, Quality Control Management, Mailing and Dispatch Management System, Stock Control, monitoring and administration | Inkript |
 | NRIS integration | Interface specification, production-side development, integration testing | Inkript, with NRB developers building the NRIS side |
-| ICT infrastructure | Virtualization hosts, storage arrays, network, firewalls, hardware security modules, backup, workstations, secondary environment | Inkript |
+| ICT infrastructure | Virtualization hosts, storage array, network, firewalls, hardware security modules, backup, workstations, secondary environment | Inkript |
 | Security | Security controls, establishment of the Document Signer key with e-Government, Security Operations Center | Inkript |
 | Polycarbonate cards | Card body design with NRB, manufacture, qualification on the laser systems, phased delivery | Card manufacturer, under Inkript |
 
@@ -188,8 +188,8 @@ when the server room is handed over, and the equipment track when the equipment 
 |---|---|
 | ICT infrastructure delivered, inspected on delivery and racked | 15 |
 | Platform build: application and database clusters, storage array, directory, database, security stack, non-production environments | 16 |
-| Hardware security modules installed. Document Signer key generated at a key ceremony witnessed by NRB, and the certificate signing request submitted to e-Government | 16 |
-| Secondary environment deployed at the Blantyre disaster recovery data center and replication established | 16 to 18 |
+| Hardware security module installed at the primary site. Document Signer key generated at a key ceremony witnessed by NRB, and the certificate signing request submitted to e-Government | 16 |
+| Secondary environment deployed at the Blantyre disaster recovery data center, its hardware security module enrolled and the Document Signer key replicated to it, and replication established | 16 to 18 |
 | Application deployed and integrated with the directory | 17 |
 | Early integration with NRIS, each interface tested against the NRIS test environment as NRB delivers it | 18 to 22 |
 | Pre-commissioning tests of the ICT estate, and performance and security testing | 19 to 21 |
@@ -205,7 +205,8 @@ moves integration with NRIS five weeks earlier, takes the Document Signer certif
 critical path, and leaves the weeks after the equipment arrives for the equipment alone. NRB
 technical staff shadow both tracks from week 15.
 
-The key ceremony is held in week 16, as soon as the modules are installed, because the certificate it
+The key ceremony is held in week 16, as soon as the module at the primary site is installed, because
+the certificate it
 produces has an issuing time outside the plan's control. The certificate is expected by week 19, six
 weeks before pilot production needs it. The certificate signing request carries only the public key,
 and the private key never leaves the modules, as described in System Architecture Section 10.4.

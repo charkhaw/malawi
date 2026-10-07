@@ -72,11 +72,13 @@ synthetic or masked data. NRB is the data controller for citizen data held in th
 
 ## 10.3 Identity and access management
 
-**Directory.** The System runs its own directory on two domain controllers, one in the Management
-and Monitoring Zone of the primary site and one at the secondary site, each holding a full copy of
-the directory kept current by directory replication, so that identity and authentication depend on
-no NRB service. While the domain controller at the primary site is restarted or patched, the one at
-the secondary site serves authentication and name resolution. Every operator and administrator holds one identity in it, used by every interface
+**Directory.** The System runs its own directory on three domain controllers: two in the Management
+and Monitoring Zone of the primary site, on different application hosts, and one at the secondary
+site. Each holds a full copy of the directory kept current by directory replication, so that
+identity and authentication depend on no NRB service. While one domain controller at the primary
+site is restarted or patched, the other serves authentication and name resolution without relying on
+the connection between the sites, and the one at the secondary site keeps the directory available
+if the primary site is lost. Every operator and administrator holds one identity in it, used by every interface
 through the single sign-on service described in Section 6.12, so an account disabled in the directory
 is disabled everywhere at once.
 
@@ -109,16 +111,17 @@ infrastructure and no certification authority is supplied under this Contract. T
 Government PKI for the Document Signer certificate behind the digitally signed QR code carried on the
 card, and for the certificates that authenticate its interfaces and services.
 
-**What is supplied.** Two hardware security modules at the Card Production Facility, holding the
-Document Signer key used to sign each card's QR payload, and the Signing Service described in
-Section 6.5 which is the only component holding credentials to them.
+**What is supplied.** Two hardware security modules, one at the Card Production Facility and one in
+the secondary environment, both holding the Document Signer key used to sign each card's QR payload,
+and the Signing Service described in Section 6.5, which is the only component holding credentials to
+them.
 
 | Component | Provided by |
 |---|---|
 | Root and issuing certification authority | e-Government |
 | Document Signer certificate | Issued by the Government PKI |
 | Document Signer private key | Generated inside the hardware security modules supplied under this Contract, and never extracted from them |
-| Hardware security modules | Two modules, supplied, installed and configured under this Contract as a high availability pair |
+| Hardware security modules | Two modules, one at each site, supplied, installed and configured under this Contract, the module at the secondary site replicated from the module at the primary site |
 | Signing Service | Supplied under this Contract |
 | Certificates for the interfaces and services, including the NRIS interface | Issued by the Government PKI |
 
@@ -129,16 +132,21 @@ which issues the Document Signer certificate. The certificate is loaded into the
 does the private key exist outside the modules, so no procedure, no operator and no backup can move
 it.
 
-**Why two modules rather than one.** The key cannot leave the module that generated it. A spare
-module held on a shelf therefore holds no key, and bringing one into service would require a new key
-pair and a new Document Signer certificate from the certification authority, which is not an
-operation that completes within a production shift. A single module would make signing a single
-point of failure whose loss halts card production until a certificate is reissued.
+**Why a second module, and why at the secondary site.** The key cannot leave the module that
+generated it. A spare module held on a shelf therefore holds no key, and bringing one into service
+would require a new key pair and a new Document Signer certificate from the certification authority,
+which is not an operation that completes within a production shift. A single module would make
+signing a single point of failure whose loss halts card production until a certificate is reissued.
 
-The two modules are configured as a high availability pair. The Document Signer key is replicated
-between them over the modules' own protected channel, so the key exists in both and can be extracted
-from neither. The Signing Service addresses the pair rather than an individual module, and the loss
-of one module reduces signing capacity without interrupting production.
+The second module is therefore a replica holding the same key, and it is placed at the secondary site
+so that the key also survives the loss of the primary site. The module at the secondary site is
+enrolled into the same security domain under the same quorum of custodians, and the Document Signer
+key is replicated to it over the modules' own protected channel, carried inside the encrypted
+connection between the sites. The key exists in both modules and can be extracted from neither. The
+Signing Service signs through the module at the primary site. If that module fails, it signs through
+the module at the secondary site over the same connection, so the loss of one module does not
+interrupt production while the connection between the sites is available. After the loss of the
+primary site, production resumes with the replicated key, without waiting for a new certificate.
 
 This also satisfies the spare parts obligation in Section 12.5, which requires a replacement unit for
 every critical component that would otherwise be a single point of failure. For a component whose key
@@ -150,16 +158,17 @@ obligation can take.
 | Step | Action |
 |---|---|
 | 1 | The Data Preparation Service assembles the QR payload from the citizen record, encrypted where the Purchaser's QR specification requires it |
-| 2 | It calls the Signing Service, which submits the payload to the hardware security module pair |
-| 3 | A module signs with the Document Signer private key and returns the signature |
+| 2 | It calls the Signing Service, which submits the payload to the hardware security module at the primary site, or to the replicated module at the secondary site if that module is unavailable |
+| 3 | The module signs with the Document Signer private key and returns the signature |
 | 4 | The signature is incorporated into the payload structure and engraved into the card |
 | 5 | The operation is logged with the record it applied to and the certificate that signed it |
 
 ![Card signing](../images/Figure-10-2-Card-Signing.png)
 
-*Figure 10.2: Card signing. The Document Signer key is generated inside the hardware security
-modules and never leaves them; only the signing request and the certificate pass to and from the
-certification authority. Numbers are the signing steps in the table above.*
+*Figure 10.2: Card signing. The Document Signer key is generated inside the hardware security module
+at the primary site and replicated only to the module at the secondary site; it never leaves them,
+and only the signing request and the certificate pass to and from the certification authority.
+Numbers are the signing steps in the table above.*
 
 **Certificate validity.** A signature must remain verifiable for as long as the card it is on remains
 valid. The Document Signer certificate's validity period therefore has to cover the period during

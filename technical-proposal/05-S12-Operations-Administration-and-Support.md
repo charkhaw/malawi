@@ -75,19 +75,21 @@ analysis and forecasting.
 |---|---|
 | Scheduled automated backup | Databases, configuration, application systems and audit logs |
 | Backup types | Full, incremental and differential |
-| Encryption | All backup storage encrypted |
+| Encryption | All backup storage encrypted: the backup repository and the immutable backup storage at each site |
 | Validation | Backup integrity checked rather than assumed |
-| Offsite replication | Replicated to the immutable backup storage of the secondary environment, at the Purchaser's disaster recovery data center |
-| Immutable storage | Backup copies that cannot be altered or deleted within their retention period |
+| Offsite replication | Replicated, encrypted, to the backup repository and the immutable backup storage of the secondary environment, at the Purchaser's disaster recovery data center |
+| Immutable storage | Backup copies that cannot be altered or deleted within their retention period, on not less than 40 TB of immutable backup storage at each site |
 
-**Backup management.** A centralized console governs scheduling and policy, retention is enforced on
-daily, weekly, monthly and yearly cycles, and backup monitoring raises an alert and a
+**Backup management.** Veeam Backup & Replication provides one console governing scheduling and
+policy at both sites. Routine restore points are held in the encrypted backup repository, and copies
+are kept on the immutable backup storage and replicated to the secondary site. Retention is enforced
+on daily, weekly, monthly and yearly cycles, and backup monitoring raises an alert and a
 notification for every failed or missed backup job.
 
 **Ransomware recovery.** The backup copies at both sites are immutable, so an attacker holding
 administrative credentials can neither delete nor encrypt them within their retention period. The
-backup management and the immutable backup storage are administered with credentials held apart
-from the production directory, so that administrative rights taken in production do not reach
+backup server, the backup repositories and the immutable backup storage are administered with
+credentials held apart from the production directory, so that administrative rights taken in production do not reach
 them. Recovery from a ransomware incident starts once the evidence has been preserved as described
 in Section 10.7: hosts are rebuilt from the secure baselines described in Section 12.1, data is
 restored from the most recent immutable copy verified as clean onto an isolated segment and checked

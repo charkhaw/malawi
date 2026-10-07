@@ -10,7 +10,8 @@ not less than 99 percent. They are confirmed with the Purchaser during design.
 
 | Scenario | Response and decision |
 |---|---|
-| Loss of a host, database node, switch, firewall, storage controller or one hardware security module | Automatic failover within the facility; the component repaired under the support model |
+| Loss of a host, database node, switch, firewall or storage controller | Automatic failover within the facility; the component repaired under the support model |
+| Loss of the hardware security module at the primary site | Signing continues on the module at the secondary site, over the encrypted connection between the sites; the module replaced under the support model |
 | Loss of a personalization or mailing line | Production continues on the other line |
 | Loss of the primary storage array or site | The secondary environment carries the data and application services and keeps every record available to NRIS; production resumes when the primary platform and equipment are available. Invoked by NRB's business continuity manager |
 | Ransomware or a destructive attack | Incident Response Plan first. Hosts rebuilt from the hardened baselines; data restored from the most recent immutable copy verified as clean, on an isolated segment; credentials replaced. The secondary environment is checked before it is trusted, because replication may have carried the damage. Directed by the incident manager, with NRB |

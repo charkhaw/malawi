@@ -140,10 +140,10 @@ engineers, infrastructure engineers and technical support staff.
 | Module | Content | Days | Roles |
 |---|---|---|---|
 | System architecture | Components, network zones, data flows, high availability and the secondary environment | 1 | All |
-| Hardware administration | Virtualization hosts, the storage arrays, hardware security modules, workstations, and first-line maintenance of the personalization and mailing equipment | 1 | IE, TS |
+| Hardware administration | Virtualization hosts, the storage array, hardware security modules, workstations, and first-line maintenance of the personalization and mailing equipment | 1 | IE, TS |
 | Software administration | Application services, configuration, releases and change control | 1 | SA, TS |
 | Database administration | SQL Server administration, replication to the secondary environment, backup, restore and point in time recovery | 2 | DB |
-| Network and infrastructure | Zones and VLANs, firewall policy, the Government Wide Area Network links, the storage network, the Hyper-V clusters and the storage arrays | 2 | NE, IE, SE |
+| Network and infrastructure | Zones and VLANs, firewall policy, the Government Wide Area Network links, the storage network, the Hyper-V clusters, the standalone host at the secondary site and the storage array | 2 | NE, IE, SE |
 | Security administration | Access control and privileged access, hardware security module operation and key lifecycle, security monitoring, Security Operations Center procedures, incident handling | 2 | SE, SA |
 | Integration and APIs | The NRIS interface and its Interface Control Documents, monitoring exchanges, exceptions and retries | 1 | SA, DB |
 | Troubleshooting and support | Diagnostics, log analysis, event correlation, escalation, and fault simulations on the training environment | 2 | All |
@@ -294,7 +294,7 @@ certificates are provided with the key personnel.
 | Secure Personalization System Engineer | Card personalization operations, reject handling and calibration | Bachelor's degree in computer, electronics or mechatronics engineering; at least five years on large-scale polycarbonate card personalization and laser engraving; manufacturer certification on the personalization system supplied |
 | Card Mailing System Engineer | Mailing system operations and dispatch | Bachelor's degree in IT, computer, electronics or mechatronics engineering; at least five years on ID card mailing and dispatch systems |
 | ID Card Security Specialist | Quality assurance procedures and the inspection of card security features | Degree or diploma in computer science or information security; ACE-M and PKI certifications; at least five years implementing multilayer polycarbonate card security |
-| Card Production Facility Infrastructure Engineer | Hardware administration, the clusters and the storage arrays, database administration, backup, recovery and failover | Degree in computer engineering, IT or electrical engineering; Cisco CCNA or CCNP and relevant manufacturer certifications; at least five years in data center and high availability systems |
+| Card Production Facility Infrastructure Engineer | Hardware administration, the clusters and the storage array, database administration, backup, recovery and failover | Degree in computer engineering, IT or electrical engineering; Cisco CCNA or CCNP and relevant manufacturer certifications; at least five years in data center and high availability systems |
 | Network Engineer | Zones and VLANs, firewall policy and the wide area network links | Degree or diploma in computer science, network engineering or telecommunications; CCNA and CCNP; at least five years on VLANs, firewalls and secure government networks |
 | Cybersecurity and PKI Specialist | Security administration, hardware security module operation and key lifecycle, security monitoring and incident handling | Degree in cybersecurity, computer science or information security; CISSP, CISM and CEH; at least seven years in cybersecurity, including three in identity management or PKI |
 | Software Integration Specialist | Software administration, the NRIS interface, integration and APIs | Degree in computer science, software engineering or information systems; certifications in APIs, middleware and web services; at least five years in enterprise systems integration |

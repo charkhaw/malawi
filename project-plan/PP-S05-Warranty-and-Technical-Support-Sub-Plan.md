@@ -24,7 +24,7 @@ fastest, and repair is kept off the critical path:
 |---|---|---|
 | Personalization and mailing equipment | On site | A faulty module is replaced from the on-site spares by the technical team. The faulty module is returned to the equipment manufacturer for repair and restocked |
 | ICT infrastructure | On site | Services continue on the redundant components described in System Architecture Section 9.3 while the failed item is replaced from the on-site spares. The failed item is returned to its manufacturer under warranty |
-| Hardware security modules | On site | Signing continues on the surviving module of the pair. A replacement module is enrolled into the pair from the surviving module, so no new key and no new certificate are needed |
+| Hardware security modules | On site | If the module at the primary site fails, signing continues on the module at the secondary site, over the encrypted connection between the sites. A replacement module is enrolled from the remaining module, so no new key and no new certificate are needed |
 | Application software | On call, remotely or on site | Defects are corrected and released under the change control described in System Architecture Section 12.1 |
 
 ## 5.2 Support organization and service desk
@@ -146,7 +146,7 @@ of failure, since each of those requires a replacement unit on site.
 | Printer specific components | Laser marking units and their optics, cooling, card feeders and transport, verification cameras and reject modules, and the feeders, inserters and carrier printers of the mailing systems |
 | Encoding and laminating modules | None are fitted. The cards are chipless, the QR code is laser engraved, and there is no laminating stage |
 | Electronic and power spares | Industrial control PCs, power supplies, control boards and sensors of the equipment, and power supplies and drives of the ICT infrastructure |
-| Infrastructure spares | A replacement for every critical infrastructure component identified as a single point of failure in the Critical Spare Parts List, and spare drives for the storage array. Components deployed in pairs, including the core switches, the firewalls, the hardware security modules, and the controllers and power supplies of the storage array, are covered by their second unit while a replacement is obtained. Spares for the facility systems are held under the facility works |
+| Infrastructure spares | A replacement for every critical infrastructure component identified as a single point of failure in the Critical Spare Parts List, and spare drives for the storage array. Components deployed in pairs, including the core switches, the firewalls, and the controllers and power supplies of the storage array, are covered by their second unit while a replacement is obtained, and the hardware security module at the primary site by the module at the secondary site. Spares for the facility systems are held under the facility works |
 | Consumables and adjacent wear items | Lubricants, cleaning materials, filters, cleaning kits, fuses, belts, seals, gaskets, oils and greases, and calibration materials |
 
 **Spares are tracked like stock.** The spares holding and the consumables are recorded in the stock
