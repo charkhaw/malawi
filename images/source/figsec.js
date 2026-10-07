@@ -34,7 +34,7 @@ const layers = [
   ["Network", [
     [["Perimeter firewall,", "NRB and", "e-Government"], "double"],
     ["Next generation", "firewall pair,", "intrusion prevention"],
-    ["Segregated zones;", "Machine Control Zone", "on its own switches"],
+    ["Ten segregated zones;", "Machine Control Zone", "on its own VLAN"],
     ["Mutual certificate", "authentication to NRIS;", "TLS 1.2 or higher"],
   ]],
   ["Identity and access", [

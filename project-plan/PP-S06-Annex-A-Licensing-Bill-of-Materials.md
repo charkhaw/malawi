@@ -35,7 +35,7 @@ controller, the secondary copy of the database and standby copies of the service
 | Bulk SMS service | Per message, in a three-year bundle | The alert volume of the estate over three years | Delivery of alerts by SMS to the NRB staff designated for each type of alert |
 | Backup and recovery, Veeam Backup & Replication | Per protected workload | 12, the production virtual machines at the primary site, with configuration and audit logs, replicated to the secondary site | Scheduled backup, immutable retention and restoration |
 | Next generation firewall security subscriptions | Per appliance | 3: the high availability pair at the primary site and the firewall at the secondary site | Intrusion prevention signatures and threat updates |
-| Storage array and network device support and firmware | Per device | The storage array, 7 switches and 2 firewalls at the primary site, and 1 switch and 1 firewall at the secondary site | Manufacturer support, replacement and firmware updates |
+| Storage array and network device support and firmware | Per device | The storage array, 5 switches and 2 firewalls at the primary site, and 1 switch and 1 firewall at the secondary site | Manufacturer support, replacement and firmware updates |
 | Hardware security module support and client software | Per module | 2, one at each site | Firmware updates, and the client software through which the Signing Service reaches the modules |
 
 **Equipment software**, supplied by the equipment manufacturer:

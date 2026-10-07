@@ -72,8 +72,7 @@ the non-production environments are the first workloads stopped to make room for
 | Backup repository | 1 | Encrypted, managed by Veeam Backup & Replication, holding the restore points used for routine restoration |
 | Immutable backup storage | 1 | Not less than 40 TB usable, encrypted, covering retention cycles, with copies that no administrator can alter or delete before their retention ends |
 | Core switches | 2 | Layer 3, redundant pair carrying the zone VLANs, including the Storage Zone |
-| Access switches | 2 | Machine Control Zone, each serving one personalization line and one mailing line, physically separate from the core pair |
-| Edge switches | 3 | Managed and non-PoE, in one stack, connecting the operator and administrative workstations in the User Network, and the management interfaces in the Management Network, to the core pair |
+| Edge switches | 3 | Managed and non-PoE, in one stack, connecting the operator and administrative workstations in the User Network, the personalization and mailing lines in the Machine Control Zone, and the management interfaces in the Management Network, to the core pair |
 | Next generation firewalls | 2 | High availability pair, providing zone policy and intrusion detection and prevention |
 | Hardware security module | 1 | Holds the Document Signer key, replicated to a second module at the secondary site, as described in Section 10.4 |
 | Operator and administrative workstations | 10 | Client devices for the consoles described below |
@@ -225,7 +224,7 @@ through firewall policy, and no zone is reachable from another by default.
 |---|---|---|
 | 10 | Management Network | The management interfaces of the hosts, the storage array, the switches, the firewalls, the hardware security module and the backup storage, reached from the administrative access host |
 | 20 | User Network | The operator and administrative workstations, connected through the edge switch stack |
-| 30 | Machine Control Zone | The personalization and mailing lines and their control systems |
+| 30 | Machine Control Zone | The personalization and mailing lines and their control systems, connected through the edge switch stack |
 | 40 | Application Zone | The application services described in Section 6, including the Signing Service, and, on segments of their own, the hardware security module and the non-production environments |
 | 50 | Database Zone | The database nodes |
 | 60 | External Integration Zone | The interface to NRIS and to external services |
@@ -254,10 +253,10 @@ through the firewall pair. Double borders are provided by the Purchaser; shaded 
 control systems with their own lifecycle, patched to the equipment manufacturer's schedule rather
 than to the operating system vendor's. Placing them in their own zone means that constraint does not
 set the patching posture of the rest of the estate, and that a compromise elsewhere does not reach
-the equipment that produces identity documents. The lines connect to two access switches
-of their own rather than to the core pair, each serving one personalization line and one mailing
-line, so the equipment is separated physically as well as logically, and the loss of a switch takes
-one pair of lines out of production rather than all four.
+the equipment that produces identity documents. The lines connect to the edge switch stack on ports
+assigned to the Machine Control Zone, which reach the other zones only through the firewall pair.
+Personalization line 1 and mailing line 1 connect to one switch of the stack and the lines numbered
+2 to another, so the loss of a switch takes one pair of lines out of production rather than all four.
 
 **Why the Database Zone is separated from the Application Zone.** The application services are the
 components that talk to other systems and therefore the components most exposed. Requiring traffic
@@ -320,7 +319,7 @@ of the application cluster, the two database nodes run on the two hosts of the d
 every host reaches the storage array through both of its controllers, and printing jobs are
 distributed across available
 lines by the Card Personalization Management System described in Section 6.2. The failure of a
-line, an access switch, a host, a database node, a storage controller, a core switch or a firewall
+line, an edge switch, a host, a database node, a storage controller, a core switch or a firewall
 reduces throughput, or pauses it for the failover window, rather than stopping production. Nor does
 the failure of the hardware security module at the primary site: the Signing Service then signs
 through the replicated module at the secondary site, over the encrypted connection between the
@@ -413,8 +412,7 @@ delivered under the facility works.
 | Backup repository, secondary site | 1 | Encrypted, receiving the backup copies replicated from the primary site |
 | Immutable backup storage, secondary site | 1 | The offsite copy of the backups, not less than 40 TB usable, encrypted |
 | Core switches, primary site | 2 | Layer 3, redundant pair, carrying the zone VLANs, including the Storage Zone |
-| Access switches, primary site | 2 | Machine Control Zone, each serving one personalization line and one mailing line |
-| Edge switches, primary site | 3 | Managed, non-PoE, stacked, for the User Network and the Management Network |
+| Edge switches, primary site | 3 | Managed, non-PoE, stacked, for the User Network, the Machine Control Zone and the Management Network |
 | Next generation firewalls, primary site | 2 | High availability pair, with intrusion detection and prevention |
 | Next generation firewall, secondary site | 1 | Standalone, with zone policy and intrusion prevention for the secondary environment |
 | Core switch, secondary site | 1 | Layer 3, standalone, carrying the secondary environment's network |

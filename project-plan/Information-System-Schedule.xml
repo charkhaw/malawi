@@ -1419,7 +1419,7 @@
     <Task>
       <UID>60</UID>
       <ID>60</ID>
-      <Name>Hardware security modules installed, key ceremony, certificate signing request to e-Government</Name>
+      <Name>Hardware security module installed at the primary site, key ceremony, certificate signing request to e-Government</Name>
       <Active>1</Active>
       <Manual>0</Manual>
       <Type>0</Type>
@@ -1442,7 +1442,7 @@
     <Task>
       <UID>61</UID>
       <ID>61</ID>
-      <Name>Secondary environment deployed at Blantyre and replication established</Name>
+      <Name>Secondary environment deployed at Blantyre, its hardware security module enrolled, and replication established</Name>
       <Active>1</Active>
       <Manual>0</Manual>
       <Type>0</Type>

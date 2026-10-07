@@ -24,7 +24,7 @@ reconciliation or behavior rule that finds the act within the shift.
 | C05 Ransomware | Endpoint detection and response; segmentation; hardened baselines; immutable backups under separate credentials; tested recovery |
 | C06 Administrator credentials stolen | Multi-factor authentication; privileged access issued per session and recorded; administration only through the administrative access host; awareness training |
 | C07 NRIS interface abused | Mutual certificate authentication; integrity check and validation of every exchange; requests accepted only if released in NRIS |
-| C08 Equipment control systems compromised | Machine Control Zone on its own switches; removable media controlled; integrity baseline from factory acceptance; compensating firewall rules within seven days of an advisory |
+| C08 Equipment control systems compromised | Machine Control Zone on its own VLAN, reached only through the firewall pair; removable media controlled; integrity baseline from factory acceptance; compensating firewall rules within seven days of an advisory |
 | C09 Tampered hardware or software | Supply through authorized channels; inspection on delivery; secure boot and signed firmware; software hashes verified |
 | C10 Application vulnerability | Secure development lifecycle; static and dynamic testing; release gate; independent penetration testing |
 | C11 Audit records altered | Write-once audit storage; events forwarded to monitoring and to NRB's Security Operations Center; auditor role separate from administrator |
