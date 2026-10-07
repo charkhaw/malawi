@@ -16,7 +16,7 @@ already been tested. They are not where its defects are first found.
 | Integration testing | The system works with NRIS and meets its performance and security requirements | Card Production Facility, against the NRIS test environment | 18 to 26 | Supplier, with NRB developers | Integration, performance and security test reports |
 | User acceptance testing | Business workflows, functions and reports are acceptable to NRIS stakeholders | Card Production Facility | 24 and 25 | NRB stakeholders, supported by the Supplier | User Acceptance Test report |
 | Pre-commissioning tests | The installed system is ready for the Installation Certificate | Card Production Facility | 19 to 26 | Supplier, with the Purchaser's assistance | The Table A reports |
-| Operational acceptance tests | The system operates in live production, and NRB operates it | Card Production Facility, live | 27 to 30 | Purchaser, with the Supplier's assistance | The Table B reports |
+| Operational acceptance tests | The system operates in production conditions, and NRB operates it | Card Production Facility, against the NRIS test environment | 27 to 30 | Purchaser, with the Supplier's assistance | The Table B reports |
 | Continuing assurance | The system remains secure and recoverable | Card Production Facility | After acceptance | Supplier, and an independent party for penetration testing | Vulnerability, penetration and disaster recovery test reports |
 
 **Inspection on delivery.** Each delivery is checked against the packing list and the purchase
@@ -43,7 +43,7 @@ write.
 | Factory | Equipment manufacturer's facility | Factory acceptance testing | Synthetic, on the actual card stock |
 | User acceptance testing | Non-production segment of the platform at the Card Production Facility | Integration testing and user acceptance testing | Records from the NRIS test environment |
 | Training | Non-production segment of the platform at the Card Production Facility | Training under Section 3, and fault simulation | Masked |
-| Production | Card Production Facility and the secondary environment | Pre-commissioning, against the NRIS test environment, then operational acceptance in live operation | Test records, then live records |
+| Production | Card Production Facility and the secondary environment | Pre-commissioning and operational acceptance, against the NRIS test environment, then live operation after Operational Acceptance | Test records, then live records |
 
 The non-production environments are described in System Architecture Section 9.1. The NRIS test
 environment is provided by the Purchaser, and connectivity to it from the Card Production Facility is
@@ -137,7 +137,7 @@ successful completion is the condition for the Installation Certificate.
 | 3 | Environmental systems | Performed under the facility works. The Information System relies on its result | | |
 | 4 | Network infrastructure | LAN and WAN connectivity, redundancy, switch function, throughput, latency, VLANs, DNS and DHCP | 19 | Network Acceptance Report |
 | 5 | Cybersecurity and access control | Active Directory integration, role-based access, password policy, firewall rules, anti-malware, endpoint protection, log generation and event monitoring | 19 | Security Readiness Report |
-| 6 | Personalization equipment | Hopper loading and feeding, image, text and variable data engraving, alignment and greyscale consistency, and QR encoding | 24 | Equipment Functional Test Report |
+| 6 | Personalization equipment | Hopper loading and feeding, image, text and variable data engraving, alignment and greyscale consistency, QR encoding, barcode encoding where applicable, and print quality | 24 | Equipment Functional Test Report |
 | 7 | Mailing system | Envelope feeding and insertion, address printing, sorting and batch processing | 24 | Mailing System Functional Test Report |
 | 8 | Software installation and configuration | Operating systems, database, application, license verification, backup configuration and monitoring tools | 19 | Software Readiness Report |
 | 9 | NRIS integration | Interface connectivity, secure communication, retrieval of demographic data, photograph and signature, status updates, and invalid record, missing data and communication failure handling | 25 | NRIS Integration Test Report |
@@ -162,7 +162,9 @@ any test whose result the correction could affect is repeated with it.
 ## 4.6 Operational acceptance tests
 
 The operational acceptance tests are performed by the Purchaser with the Supplier's assistance, in
-the live production environment, once the Installation Certificate has been issued. Their successful
+the production environment against the NRIS test environment, as the Responses to Queries 003
+require, once the Installation Certificate has been issued. Cards produced during the tests are not
+issued to citizens. Their successful
 completion is the condition for the Operational Acceptance Certificate.
 
 **No test is performed for the first time at acceptance.** Each operational acceptance test has

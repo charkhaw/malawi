@@ -17,7 +17,6 @@ in System Architecture Section 10, and this plan refers to them rather than repe
 | 1. Alignment with international frameworks | Plan mapped to NIST CSF or ISO 27005 | Sections 1.2, 3 and 4 |
 | | Framework Compliance Matrix | Section 3.2 |
 | | Cybersecurity Architecture Diagram | Section 3.1 |
-| | Evidence of past implementation | Section 11.3 |
 | 2. Risk identification, mitigation and response | Risk Identification Register | Section 4.3 |
 | | Risk Assessment Matrix | Sections 4.2 and 4.4 |
 | | Mitigation and Control Strategy Document, template | Section 5 |

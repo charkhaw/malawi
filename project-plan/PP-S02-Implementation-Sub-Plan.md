@@ -219,9 +219,10 @@ disaster recovery data center, as described in System Architecture Section 9.3.
 
 **From pilot to live production.** Pilot production in week 26 runs the full process on test
 records against the NRIS test environment, and its cards are destroyed under the secure destruction
-procedure rather than issued. Live production begins with operational acceptance in week 27, on
-real NRIS records, and volume rises through the sustained production stability test to the full
-contractual throughput.
+procedure rather than issued. Operational acceptance tests in weeks 27 to 30 also run against the
+NRIS test environment, as the Responses to Queries 003 require, and their cards are not issued to
+citizens. Live production on real NRIS records begins once Operational Acceptance is achieved, at the
+full contractual throughput.
 
 **One request, one facility.** While the existing card printers remain in service, a request must be
 produced by one facility only. The Information System retrieves the records NRIS releases to it, and

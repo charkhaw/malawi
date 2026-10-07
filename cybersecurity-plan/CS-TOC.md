@@ -53,4 +53,3 @@
 ### 11. Compliance
 - 11.1 Compliance and governance statement
 - 11.2 Requirements compliance matrix
-- 11.3 Certifications and evidence of past implementation
