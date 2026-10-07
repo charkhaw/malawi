@@ -19,6 +19,12 @@ already been tested. They are not where its defects are first found.
 | Operational acceptance tests | The system operates in live production, and NRB operates it | Card Production Facility, live | 27 to 30 | Purchaser, with the Supplier's assistance | The Table B reports |
 | Continuing assurance | The system remains secure and recoverable | Card Production Facility | After acceptance | Supplier, and an independent party for penetration testing | Vulnerability, penetration and disaster recovery test reports |
 
+**Inspection on delivery.** Each delivery is checked against the packing list and the purchase
+order, and its packaging and shock indicators are checked for damage. Serial numbers are recorded at
+receipt. A shortage, a discrepancy or damage is recorded, photographed and reported for replacement,
+and the item is held aside until it is resolved. NRB signs the delivery inspection record before
+installation begins.
+
 **Entry and exit.** A level begins only when the level before it has met its exit condition, and no
 level exits with a critical or major defect open, as defined in Section 4.7. Each level ends with a
 report, and the Purchaser's approval of the report is the record that the level is complete.
@@ -141,7 +147,7 @@ successful completion is the condition for the Installation Certificate.
 | 13 | Backup and recovery | Backup execution, database and configuration restoration, and the disaster recovery procedures, including failover to the secondary environment | 20 | Backup and Recovery Test Report |
 | 14 | Production workflow simulation | Record retrieval from NRIS, job generation, personalization, quality inspection, mailing preparation, dispatch generation and status update to NRIS | 25 | Workflow Simulation Report |
 | 15 | Pilot production readiness | 500 to 1,000 test cards produced through the actual production process | 26 | Pilot Production Readiness Report |
-| 16 | Performance and capacity | Sustained and peak production rates, batch processing and mailing throughput | 26 | Capacity and Performance Test Report |
+| 16 | Performance and capacity | Sustained and peak production rates in accepted finished cards, batch processing and mailing throughput | 26 | Capacity and Performance Test Report |
 
 **Pilot production.** The pilot run produces between 500 and 1,000 test cards from records in the
 NRIS test environment, through the full process from retrieval to dispatch record and status update.
@@ -166,7 +172,7 @@ already been rehearsed in pre-commissioning, so that acceptance confirms a known
 |---|---|---|---|---|
 | 1 | End-to-end workflow | All test records processed end to end without manual intervention, with status in NRIS and a full audit trail | 27 | Pre-commissioning 14 |
 | 2 | Sustained production stability | Continuous operation over the defined period, availability of not less than 99 percent, no severity 1 failure | 27 and 28 | Pre-commissioning 16 |
-| 3 | Production throughput | Contractual cards per hour and mail items per hour achieved, with no backlog | 27 | Pre-commissioning 16 |
+| 3 | Production throughput | Contractual accepted finished cards per hour and mail items per hour achieved, with no backlog | 27 | Pre-commissioning 16 |
 | 4 | Peak load | No failure or data loss, response times within thresholds, throughput not less than 95 percent of the nominal capacity, which is the contractual rate in System Architecture Section 3.5 | 27 | Performance testing |
 | 5 | Data accuracy and integrity | Not less than 99.99 percent accuracy of data on cards, no mismatch with NRIS, no loss or duplication | 27 | Pre-commissioning 10 |
 | 6 | NRIS business process integration | New issuance, reprint, replacement, and lost and damaged card processing, with no failed or orphaned transactions | 27 | Pre-commissioning 9 |
