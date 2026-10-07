@@ -9,8 +9,10 @@
  * a new section file is all that is needed for it to appear in the output.
  *
  * A reference into another document is written "System Architecture Section
- * 12.4". It stays plain text, since a field cannot point into another file,
- * and the build checks it against that document's real headings instead.
+ * 12.4", and the build checks it against that document's real headings. A REF
+ * field cannot follow it into another file, so it stays plain text, unless the
+ * document sets linkExternal: then each number becomes a HYPERLINK field that
+ * opens the other document at that heading, while both files sit in one folder.
  *
  * Section numbers are not written into the document as text. Headings carry a
  * multilevel list, so Word owns the numbering: delete 3.1 in Word and 3.2
@@ -25,16 +27,21 @@
  *
  * All of this is field codes, so the build finishes by asking Word to evaluate
  * them. If Word is unavailable the document is still produced, and still shows
- * the right numbers, because every field is written with a cached value.
+ * the right numbers, because every field is written with a cached value. The
+ * contents are written with their entries too, and with page numbers laid out
+ * by LibreOffice where it is installed, so the contents page is never empty
+ * before Word refreshes it.
  */
 
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
+const { pathToFileURL } = require("url");
 const { execFileSync } = require("child_process");
 const {
   Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType,
   Table, TableRow, TableCell, WidthType, ShadingType, BorderStyle,
-  ImageRun, PageBreak, Header, Footer, PageNumber,
+  ImageRun, Header, Footer, PageNumber,
   Bookmark,
   LevelFormat, LevelSuffix, TableOfContents, SimpleField,
 } = require("docx");
@@ -142,10 +149,10 @@ function phraseRuns(phrase, style) {
   return out;
 }
 
-/* "System Architecture Section 12.4" points into another document. A field
-   cannot follow it there, so it stays as text, and each number in it is
-   checked against that document's headings so a renumber there cannot leave
-   this document pointing at the wrong place without anyone noticing. */
+/* "System Architecture Section 12.4" points into another document. A REF field
+   cannot follow it there, so each number in it is checked against that
+   document's headings instead, so a renumber there cannot leave this document
+   pointing at the wrong place without anyone noticing. */
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const EXT_NAMES = Object.keys(DOC.external || {});
 const EXT_PHRASE = EXT_NAMES.length
@@ -160,8 +167,8 @@ function externalRanges(text) {
   let m;
   EXT_PHRASE.lastIndex = 0;
   while ((m = EXT_PHRASE.exec(text)) !== null) {
-    ranges.push([m.index, m.index + m[0].length]);
     const name = m[1];
+    ranges.push({ start: m.index, end: m.index + m[0].length, name, text: m[0] });
     const anchors = EXT_ANCHORS[name] || (EXT_ANCHORS[name] = liveAnchors(DOCS[DOC.external[name]]));
     for (const n of m[2].match(/\d+(?:\.\d+)?/g) || []) {
       if (!anchors.has("sec_" + n.replace(/\./g, "_"))) EXT_DANGLING.push(name + " Section " + n);
@@ -170,19 +177,54 @@ function externalRanges(text) {
   return ranges;
 }
 
-function xrefRuns(text, style) {
-  const ext = externalRanges(text);
-  const inExternal = (i) => ext.some(([a, b]) => i >= a && i < b);
+/* A section number in a reference into another document, as a HYPERLINK field
+   that opens that document at the heading's bookmark. Word resolves the file
+   name against this document's folder, so the link holds while the documents
+   sit together under the names the build gives them. */
+class FileLink extends SimpleField {
+  constructor(file, anchor, text, style) {
+    super('HYPERLINK "' + file + '" \\l "' + anchor + '"');
+    this.root.push(new TextRun({ text, ...style, style: "Hyperlink" }));
+  }
+}
+
+function externalRuns({ name, text }, style) {
+  if (!DOC.linkExternal) return [new TextRun({ text, ...style })];
+  const file = DOCS[DOC.external[name]].out;
+  const out = [];
+  const re = /\d+(?:\.\d+)?/g;
+  let last = 0, m;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > last) out.push(new TextRun({ text: text.slice(last, m.index), ...style }));
+    out.push(new FileLink(file, "sec_" + m[0].replace(/\./g, "_"), m[0], style));
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) out.push(new TextRun({ text: text.slice(last), ...style }));
+  return out;
+}
+
+function internalRuns(text, style) {
   const out = [];
   let last = 0, m;
   XREF_PHRASE.lastIndex = 0;
   while ((m = XREF_PHRASE.exec(text)) !== null) {
-    if (inExternal(m.index)) continue;   // left in the text run that follows
     if (m.index > last) out.push(new TextRun({ text: text.slice(last, m.index), ...style }));
     out.push(...phraseRuns(m[0], style));
     last = m.index + m[0].length;
   }
   if (last < text.length) out.push(new TextRun({ text: text.slice(last), ...style }));
+  return out;
+}
+
+function xrefRuns(text, style) {
+  const out = [];
+  let pos = 0;
+  for (const r of externalRanges(text)) {
+    if (r.start > pos) out.push(...internalRuns(text.slice(pos, r.start), style));
+    out.push(...externalRuns(r, style));
+    pos = r.end;
+  }
+  if (pos < text.length) out.push(...internalRuns(text.slice(pos), style));
   return out;
 }
 
@@ -248,15 +290,27 @@ function runs(text, { italics = false, bold = false, xref = false } = {}) {
 
 /* A real TOC field, so the contents follow the headings rather than being a
    second copy of them. Word fills it from the Heading 1 and Heading 2 styles,
-   numbers included. */
-function contentsField() {
+   numbers included. Its result is also written here, from the same headings,
+   because a field Word has not refreshed shows nothing at all: in Protected
+   View, in a previewer, or when Word is told not to update. Page numbers are
+   written when known, and Word recalculates every entry on its next update. */
+const CONTENTS = [];        // { level, label, anchor } for every Heading 1 and 2
+const CONTENTS_SLOT = {};   // where the contents go; filled when the document is assembled
+
+function contentsField(pages) {
   return new TableOfContents("Contents", {
     hyperlink: true,
     headingStyleRange: "1-2",
+    cachedEntries: CONTENTS.map((e) => ({
+      title: e.label, level: e.level, href: e.anchor,
+      page: (pages && pages[e.anchor]) || undefined,
+    })),
   });
 }
 
 /* ---------------------------------------------------------------- tables */
+
+const TABLE_SPACERS = new WeakSet();   // the empty paragraph set after each table
 
 function splitRow(line) {
   return line.replace(/^\s*\|/, "").replace(/\|\s*$/, "").split("|").map((c) => c.trim());
@@ -351,7 +405,9 @@ function parseMarkdown(md, { isToc, isFirstFile }) {
   const flushTable = () => {
     if (!table) return;
     out.push(buildTable(table));
-    out.push(new Paragraph({ spacing: { after: 140 }, children: [] }));
+    const spacer = new Paragraph({ spacing: { after: 140 }, children: [] });
+    TABLE_SPACERS.add(spacer);
+    out.push(spacer);
     table = null;
   };
   const flushAll = () => { flushPara(); flushTable(); };
@@ -389,18 +445,21 @@ function parseMarkdown(md, { isToc, isFirstFile }) {
           spacing: { before: depth === 1 ? 240 : 360, after: 140 },
           children: [new TextRun({ text, size: depth === 1 ? 32 : 26, color: "2F5496" })],
         }));
-        if (depth === 2) out.push(contentsField());
+        if (depth === 2) out.push(CONTENTS_SLOT);
         continue;
       }
 
-      if (depth === 1 && !isFirstFile && out.length === 0) {
-        out.push(new Paragraph({ children: [new PageBreak()] }));
-      }
+      // each section file starts on a new page; the break belongs to the
+      // heading, so no empty paragraph is left behind to push out a blank page
+      const newPage = depth === 1 && !isFirstFile && out.length === 0;
 
       const heading = [HeadingLevel.HEADING_1, HeadingLevel.HEADING_2,
                        HeadingLevel.HEADING_3, HeadingLevel.HEADING_4][depth - 1];
       const anchor = isToc ? null : anchorFor(text);
       const { number, title } = isToc ? { number: null, title: text } : splitHeading(text);
+      if (depth <= 2 && anchor) {
+        CONTENTS.push({ level: depth, anchor, label: number ? number + (depth === 1 ? ". " : " ") + title : title });
+      }
       /* The bookmark starts one character into the title, not at the start of
          the paragraph. Inserting a new heading by clicking at the start of an
          existing one and typing is the natural way to do it, and a bookmark
@@ -421,9 +480,9 @@ function parseMarkdown(md, { isToc, isFirstFile }) {
         // the number comes from the multilevel list, not from the text
         numbering: number ? { reference: NUM_REF, level: depth - 1 } : undefined,
         spacing: { before: depth === 1 ? 240 : 260, after: 140 },
+        pageBreakBefore: newPage || undefined,
         children,
       }));
-      if (isToc && depth === 2) out.push(contentsField());
       continue;
     }
 
@@ -508,7 +567,10 @@ const children = [];
 files.forEach((f, i) => {
   console.log("  + " + f);
   const md = fs.readFileSync(path.join(SRC, f), "utf8");
-  if (i > 0) children.push(new Paragraph({ children: [new PageBreak()] }));
+  // A section that ends in a table needs no spacer after it, since the next
+  // starts on a new page. Kept, the spacer can fall just past the bottom of a
+  // full page and leave that page blank.
+  if (TABLE_SPACERS.has(children[children.length - 1])) children.pop();
   children.push(...parseMarkdown(md, {
     isToc: /TOC\.md$/i.test(f), isFirstFile: i === 0,
   }));
@@ -584,7 +646,9 @@ if (EXT_DANGLING.length) {
   process.exit(1);
 }
 
-const doc = new Document({
+/* The document is assembled once to lay it out and, where Word is unavailable,
+   again with the page numbers that layout gave the contents. */
+const makeDocument = (pages) => new Document({
   creator: "Inkript",
   title: DOC_TITLE,
   /* Word never refreshes a REF or TOC field while you type. This asks it to
@@ -594,6 +658,12 @@ const doc = new Document({
   features: { updateFields: true },
   styles: {
     default: { document: { run: { font: "Calibri", size: 21 } } },   // 10.5pt
+    // the contents styles as Word defines them, so the written entries look
+    // the same before and after Word refreshes the contents
+    paragraphStyles: [
+      { id: "TOC1", name: "toc 1", basedOn: "Normal", next: "Normal", paragraph: { spacing: { after: 100 } } },
+      { id: "TOC2", name: "toc 2", basedOn: "Normal", next: "Normal", paragraph: { spacing: { after: 100 }, indent: { left: 210 } } },
+    ],
   },
   /* Word owns the section numbers. Level 0 numbers the Heading 1 paragraphs,
      level 1 the Heading 2 paragraphs beneath them, and a space after the
@@ -640,7 +710,7 @@ const doc = new Document({
         })],
       }),
     },
-    children,
+    children: children.map((c) => (c === CONTENTS_SLOT ? contentsField(pages) : c)),
   }],
 });
 
@@ -686,7 +756,40 @@ async function setUpdateFieldsOnOpen(file) {
   return true;
 }
 
-Packer.toBuffer(doc).then(async (buf) => {
+/* Where Word is unavailable, LibreOffice lays the document out instead and the
+   page of each heading is read from that layout. It agrees with Word's for
+   nearly every heading, and Word recalculates them all on its next update. */
+function layoutPages(file) {
+  if (!CONTENTS.length) return null;
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "build-docx-"));
+  try {
+    execFileSync("soffice", [
+      "-env:UserInstallation=" + pathToFileURL(path.join(tmp, "profile")).href,
+      "--headless", "--convert-to", "pdf", "--outdir", tmp, file,
+    ], { stdio: "pipe", timeout: 300000 });
+    const pdf = path.join(tmp, path.basename(file).replace(/\.docx$/i, ".pdf"));
+    const text = execFileSync("pdftotext", ["-layout", pdf, "-"], { encoding: "utf8", maxBuffer: 1 << 28 });
+    const norm = (s) => s.replace(/\s+/g, " ").trim();
+    const pages = text.split("\f").map((p) => p.split("\n").map(norm).filter(Boolean));
+    const key = (e) => norm(e.label).slice(0, 40);
+    // the contents list every heading, so the body starts after the page that lists the last one
+    let from = pages.findIndex((ls) => ls.some((l) => l.startsWith(key(CONTENTS[CONTENTS.length - 1])))) + 1;
+    if (from === 0) return null;
+    const found = {};
+    for (const e of CONTENTS) {
+      for (let i = from; i < pages.length; i++) {
+        if (pages[i].some((l) => l.startsWith(key(e)))) { found[e.anchor] = i + 1; from = i; break; }
+      }
+    }
+    return found;
+  } catch (e) {
+    return null;
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
+}
+
+function write(buf) {
   try {
     fs.writeFileSync(OUT, buf);
   } catch (e) {
@@ -697,6 +800,11 @@ Packer.toBuffer(doc).then(async (buf) => {
     }
     throw e;
   }
+}
+
+(async () => {
+  const buf = await Packer.toBuffer(makeDocument(null));
+  write(buf);
   console.log("\nWrote " + path.basename(OUT) + "  (" + (buf.length / 1024).toFixed(0) + " KB, " + files.length + " source files)");
   try {
     updateFields(OUT);
@@ -705,7 +813,15 @@ Packer.toBuffer(doc).then(async (buf) => {
       console.log("Set to refresh all fields when the document is opened.");
     }
   } catch (e) {
-    console.log("Could not evaluate page-number fields (Word unavailable).");
-    console.log("The contents page is still clickable. Open in Word and press Ctrl+A then F9 to fill the page numbers.");
+    console.log("Word unavailable, so the fields keep the values the build wrote.");
+    const pages = layoutPages(OUT);
+    const placed = pages ? Object.keys(pages).length : 0;
+    if (placed) {
+      write(await Packer.toBuffer(makeDocument(pages)));
+      console.log("Contents written with page numbers from a LibreOffice layout (" + placed + " of " + CONTENTS.length + " headings placed).");
+    } else {
+      console.log("Contents written without page numbers (LibreOffice unavailable).");
+    }
+    console.log("Word recalculates them when the document is opened, or on Ctrl+A then F9.");
   }
-});
+})();
