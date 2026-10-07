@@ -28,7 +28,7 @@ Inkript confirms that, if awarded the Contract, it will:
 | **Section VII clause 1.6.9, Vulnerability and penetration testing.** Independent penetration test before go-live and annually; quarterly vulnerability assessment; remediation tracking | Complies. Sections 6.2 and 6.3 |
 | **Section VII clause 1.6.10, Business continuity and disaster recovery.** Encrypted, offsite and immutable backups; failover; annual DR test; ransomware recovery | Complies. System Architecture Sections 9.3 and 12.3; Section 8 |
 | **Section VII clause 1.6.11.1, Accreditation.** Compliance of the bidder and key personnel with recognized standards | Complies. Sections 9.3 and 11.3 |
-| **Section VII clause 1.6.11.2, Certification.** ISO/IEC 27001, mandatory; ISO 9001 and ISO/IEC 20000-1, preferred | ISO/IEC 27001: complies, certificate attached. ISO 9001 and ISO/IEC 20000-1: [Inkript to confirm]. Section 11.3 |
+| **Section VII clause 1.6.11.2, Certification.** ISO/IEC 27001, mandatory; ISO 9001 and ISO/IEC 20000-1, preferred | ISO/IEC 27001 and ISO 9001: complies, certificates attached. Section 11.3 |
 | **Section VII clause 1.6.11.3, Frameworks.** NIST CSF, CIS Controls, ISO/IEC 27002, OWASP | Complies. Section 3.2; System Architecture Section 10.8 |
 | **Section VII clause 1.6.11.4, Cryptography.** FIPS 140-2 or 140-3 HSMs, X.509, eIDAS-aligned signatures | Complies. System Architecture Section 10.4 |
 | **Section VII clause 1.6.11.5, Legal and regulatory.** Malawi legislation, ESMP, GDPR principles, minimization, Privacy Impact Assessment | Complies. Section 11.1; System Architecture Section 10.2 |
@@ -38,7 +38,7 @@ Inkript confirms that, if awarded the Contract, it will:
 
 ## 11.3 Certifications and evidence of past implementation
 
-**Attached to the Technical Proposal.** Inkript's ISO/IEC 27001 certificate; the CVs and certificates
+**Attached to the Technical Proposal.** Inkript's ISO/IEC 27001 and ISO 9001 certificates; the CVs and certificates
 of the Cybersecurity and PKI Specialist, including CISSP, CISM and CEH; and the FIPS 140 validation
 certificates of the hardware security modules offered.
 

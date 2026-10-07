@@ -194,8 +194,8 @@ operation.
 | Maintenance and lifecycle | Warranty and post-warranty support, spare parts, releases, and renewal of the Document Signer certificate |
 | Audit and compliance | Audit trails, stock reconciliation, destruction certificates, and how each is inspected |
 
-**Mode and duration.** A half-day executive briefing, and two days of workshops and facilitated
-sessions for managers. Executive sessions may be held virtually where appropriate.
+**Mode and duration.** A half-day executive briefing with presentations, and two days of strategy
+sessions, workshops and facilitated sessions for managers. Executive sessions may be held virtually where appropriate.
 
 **Materials.** Executive briefing materials, governance manuals, operational dashboards, service
 level templates, risk management documentation, business continuity documentation and strategic

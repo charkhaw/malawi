@@ -349,9 +349,10 @@ start of manufacture now give each of them float.
 Every document the Information System requires is listed below with the week it is delivered, in the
 groupings of the Technical Requirements. Each is versioned, reviewed and approved before issue under
 the documentation control described in Section 4.7, and delivered in editable electronic format and
-as PDF. Documentation of the facility systems, including electrical, UPS, generator, HVAC, fire
-suppression, access control, CCTV, structured cabling and raised floor records, is delivered under the
-facility works.
+as PDF. Documentation of the facility systems, including the physical layout drawings, facility
+floor plans and power and cooling design, and the electrical, UPS, generator, HVAC, fire suppression,
+access control, CCTV, structured cabling and raised floor records, is delivered under the facility
+works.
 
 | Document | Content | Week |
 |---|---|---|
@@ -360,7 +361,7 @@ facility works.
 | ICT Site Preparation Guide | What the facility works must provide for the Information System, as described in Section 2.4 | 4 |
 | High-Level Design | Solution architecture, network architecture and data flow diagrams, and the security architecture | 5, approved 6 |
 | Low-Level Design | Detailed system design, rack elevations, IP addressing scheme, VLAN, firewall and database configuration, parameter configuration sheets and firmware versions | 5, approved 6 |
-| Integration documentation | Integration Strategy and Methodology, Detailed Integration Architecture, Interface Control Documents, API Specifications, and Data Mapping and Transformation Documents; As-Built Integration Documentation covering the API, web services and middleware configuration | 5; 16 |
+| Integration documentation | Integration Strategy and Methodology, Detailed Integration Architecture, Interface Control Documents, API Specifications, and Data Mapping and Transformation Documents; As-Built Integration Documentation covering the API, web services and middleware configuration; third-party integration procedures for the postal operator and the Government PKI | 5; 16 |
 | Security documentation | Security architecture, access control matrix, user roles and permissions matrix, encryption key management and PKI procedures, audit logging configuration, and the cybersecurity hardening guide | 5; 17 |
 | Database and data management documentation | Database schema, data dictionary, backup and restore, replication and archiving procedures, and data retention policies | 5; 17 |
 | Acceptance Test Procedures | Factory acceptance test procedure; Pre-Commissioning Test Program; operational acceptance test procedures | 14; 17; 24 |
@@ -372,12 +373,12 @@ facility works.
 | Standard Operating Procedures | Card production, card printing, quality verification, dispatch and mailing, consumables replacement, daily start-up and shut-down, batch processing, escalation and incident reporting | Draft 5; final 24 |
 | Training materials | Training manuals, presentations, practical exercise guides, quick reference guides, laboratory manuals, and videos where the task is easier shown than described | 24 |
 | Administrator training materials | Administration guides and laboratory exercise guides for the technical training | 24 |
-| Operational and maintenance checklists | Daily operational, preventive maintenance, backup verification and environmental monitoring checklists | 24 |
+| Operational and maintenance checklists | Daily operational, preventive maintenance, backup verification, environmental monitoring and facility inspection checklists | 24 |
 | Operation and maintenance manuals | Preventive maintenance manuals, troubleshooting guides, diagnostic and system recovery procedures | 24; final 30 |
 | Training records | Attendance registers, training reports and the competence matrix described in Section 3.7 | As each course completes, 25 to 28 |
 | Warranty and support documentation | Warranty certificates, support escalation matrix, service level documents and manufacturer support contacts | 30 |
 | Asset and inventory documentation | Equipment inventory register, serial number records, asset tagging schedule and software license inventory | 30 |
-| Compliance and certification documentation | Manufacturer certifications, compliance certificates, ISO compliance documentation and security compliance reports | 30 |
+| Compliance and certification documentation | Manufacturer certifications, compliance certificates, ISO compliance documentation, security compliance reports and regulatory approvals | 30 |
 | As-built documentation | As-built architecture diagrams, final network topology, final equipment placement, deviations from the approved design, and final configuration baselines | From 27; final 32 |
 
 Operating documents are delivered in week 24, before training begins in week 25, because the

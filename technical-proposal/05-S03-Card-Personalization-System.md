@@ -113,8 +113,8 @@ out of service is bypassed and production continues without interruption.*
 | Measure | Performance |
 |---|---|
 | Rated speed, per machine | Up to 2,000 cards per hour, as stated in the manufacturer's datasheet |
-| Combined output, two machines | Not less than 2,000 cards per hour, duplex |
-| Output per machine | Not less than 1,000 cards per hour |
+| Combined output, two machines | Not less than 2,000 accepted finished cards per hour, duplex |
+| Output per machine | Not less than 1,000 accepted finished cards per hour |
 | Operating window | Two shifts of seven hours, fourteen hours per day |
 | Daily output | 28,000 cards |
 | Batch size | 500 to 1,000 cards per batch |
@@ -124,7 +124,8 @@ Both faces of the card are personalized within a single pass of the transport pa
 above are for duplex personalization. The rated speed is the manufacturer's maximum. The contractual
 rates, not less than 1,000 cards per hour per machine and 2,000 combined, are the nominal capacity
 against which throughput is measured at factory acceptance, in the acceptance tests and in the
-service level reporting.
+service level reporting. As clarified in the Responses to Queries 003, throughput counts accepted
+finished cards, so a rejected card does not count towards it.
 
 **The daily figure.** Two shifts of seven hours give a fourteen hour operating window, in which the
 two lines together produce the 28,000 cards per day required. The machines are rated for continuous
