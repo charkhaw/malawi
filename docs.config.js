@@ -11,6 +11,9 @@
  * external  references written as "<name> Section 12.4" point into another
  *           document. They stay as plain text rather than becoming fields, and
  *           the build checks each one against that document's real headings.
+ * linkExternal  makes each section number in those references a hyperlink
+ *           that opens the other document at that heading. The link works
+ *           while the Word files sit in one folder under the names below.
  */
 
 module.exports = {
@@ -63,6 +66,7 @@ module.exports = {
     title: "Technical Responsiveness Checklist",
     out: "Technical-Responsiveness-Checklist.docx",
     pending: [],
+    linkExternal: true,
     external: {
       "System Architecture": "sa",
       "Preliminary Project Plan": "pp",
