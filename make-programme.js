@@ -98,6 +98,14 @@ after("stab",
   { key: "facdocs", name: "Facility as-built drawings, test reports, manuals, warranties and maintenance schedules delivered", s: 31, d: 2, pred: ["comms"] });
 addLink("golive", "facdocs");
 
+/* Tasks that start in week 1 carry no link from the Effective Date. Project
+   starts a task without predecessors at the project start anyway, and it
+   opened this programme with those six tasks at zero duration while they
+   carried the link. Links from the Effective Date with a lag are kept. */
+for (const p of PLAN) {
+  if (p.pred) p.pred = p.pred.filter((x) => x !== "T");
+}
+
 /* ------------------------------------------- who performs each task */
 
 const IK = "Inkript", RM = "RME", EQ = "Equipment manufacturer", CM = "Card manufacturer";
