@@ -18,7 +18,7 @@
 | Resumption of signing or production after an S1 incident | NRB, in writing |
 | Invocation of the secondary environment | NRB's business continuity manager, on the Supplier's advice |
 
-Inkript remains the single point of accountability under ITP 16.2(b). Its obligations under GCC 44.1
+The Supplier remains the single point of accountability under ITP 16.2(b). Its obligations under GCC 44.1
 are flowed down in writing to the equipment manufacturer, the card manufacturer and the facility works
 subcontractor, according to what each touches.
 

@@ -42,7 +42,7 @@ work; hatched bars are performed with or by NRB; open diamonds are security gate
 | Cybersecurity and PKI Specialist, proposed for the Cyber Security Expert position | Degree in cybersecurity, computer science or information security; at least seven years in cybersecurity, three in identity management or PKI; CISSP, CISM and CEH; experience with hardware security modules, encryption and certificates | Weeks 1 to 32, on site from week 15; then Level 2 security support through the warranty period |
 | Network Engineer | CCNA and CCNP; at least five years on firewalls and secure government networks | Design; weeks 15 to 23 |
 | Supplier security engineers | Experience in security monitoring and incident response | Weeks 16 to 32 |
-| Independent penetration tester | Independent of Inkript; CREST accredited or equivalent | Week 24, retest in weeks 25 and 26, then annually |
+| Independent penetration tester | Independent of the Supplier; CREST accredited or equivalent | Week 24, retest in weeks 25 and 26, then annually |
 
 The other roles meet the qualifications of Section VII clause 2.4 for their positions.
 

@@ -28,7 +28,7 @@ Security runs through every phase of the Implementation Sub-Plan in Preliminary 
 | Remediation and retest, weeks 25 and 26 | No Critical or High finding open |
 | Operational acceptance tests 9 to 12, week 27 | Success criteria of Table B |
 
-The penetration tester is independent of Inkript, and its scope and rules of engagement are approved
+The penetration tester is independent of the Supplier, and its scope and rules of engagement are approved
 by NRB before testing begins.
 
 ## 6.3 Handover and operation
