@@ -17,7 +17,7 @@
  * schedules cannot drift apart. This script adds what that schedule holds only
  * as a dependency: the facility works broken into their work packages, the
  * logistics and coordination carried by RM Enterprise, and the party that
- * performs every task, written to Project as its resource.
+ * performs every task, written to Project as the text field "Performed by".
  *
  * Every link is checked against the stated weeks, as in make-schedule.js, and
  * the script stops on any task Project would move when the file is opened.
@@ -202,20 +202,15 @@ for (const r of rows) {
   else { sub++; r.outline = top + "." + sub; }
 }
 
-/* ------------------------------------------------- resources, one per party */
+/* ---------------------------------------------------- who, in Project */
 
-const PARTIES = [IK, RM, EQ, CM, PT, NRB, DEV, EG];
+/* The party performing each task goes into Project's Text1 field, named
+   "Performed by". It was first written as resource assignments, and Project
+   2013 then recomputed every duration from them and opened the whole programme
+   at zero length. A text field carries the same information and leaves the
+   schedule exactly as stated. */
+const PERFORMED_BY = 188743731;   // Project's field ID for the task field Text1
 const leaves = rows.filter((r) => !r.summary);
-const resources = PARTIES.map((name, i) => {
-  // Each party is a team. Its maximum units are its largest number of tasks in
-  // the same week, so that Project reports no overallocation.
-  let peak = 1;
-  for (let w = 0; w < WEEKS; w++) {
-    peak = Math.max(peak, leaves.filter((t) => !t.milestone && t.owners.includes(name) && t.start <= w && t.finish > w).length);
-  }
-  return { uid: i + 1, name, peak };
-});
-const resUid = Object.fromEntries(resources.map((r) => [r.name, r.uid]));
 
 /* ---------------------------------------------------------- dates and XML */
 
@@ -229,9 +224,7 @@ const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, 
 const LINK_TYPE = { FF: 0, FS: 1, SF: 2, SS: 3 };
 const TENTHS_OF_MINUTE_PER_WEEK = 5 * 8 * 60 * 10;
 
-/* Element order follows the order Project 2013 writes, as in make-schedule.js.
-   Assignments are at 100 percent units with work equal to the duration, so on
-   a fixed units task they reproduce the stated duration exactly. */
+/* Element order follows the order Project 2013 writes, as in make-schedule.js. */
 const taskXml = rows.map((r) => {
   const dur = hours(r.milestone ? 0 : r.finish - r.start);
   const start = r.milestone ? endAt(r.start) : startAt(r.start);
@@ -270,32 +263,11 @@ const taskXml = rows.map((r) => {
       "</PredecessorLink>"
     );
   }
+  if (!r.summary && r.owners.length) {
+    lines.push("<ExtendedAttribute><FieldID>" + PERFORMED_BY + "</FieldID><Value>" + esc(r.owners.join(", ")) + "</Value></ExtendedAttribute>");
+  }
   return "    <Task>\n      " + lines.join("\n      ") + "\n    </Task>";
 }).join("\n");
-
-const resourceXml = resources.map((r) =>
-  "    <Resource>\n      " + [
-    "<UID>" + r.uid + "</UID>",
-    "<ID>" + r.uid + "</ID>",
-    "<Name>" + esc(r.name) + "</Name>",
-    "<Type>1</Type>",
-    "<IsNull>0</IsNull>",
-    "<MaxUnits>" + r.peak.toFixed(2) + "</MaxUnits>",
-  ].join("\n      ") + "\n    </Resource>").join("\n");
-
-let auid = 0;
-const assignmentXml = leaves.flatMap((t) => t.owners.map((o) => {
-  const start = t.milestone ? endAt(t.start) : startAt(t.start);
-  return "    <Assignment>\n      " + [
-    "<UID>" + ++auid + "</UID>",
-    "<TaskUID>" + t.uid + "</TaskUID>",
-    "<ResourceUID>" + resUid[o] + "</ResourceUID>",
-    "<Finish>" + endAt(t.finish) + "</Finish>",
-    "<Start>" + start + "</Start>",
-    "<Units>1</Units>",
-    "<Work>" + hours(t.milestone ? 0 : t.finish - t.start) + "</Work>",
-  ].join("\n      ") + "\n    </Assignment>";
-})).join("\n");
 
 const workDay = (n) =>
   "      <WeekDay><DayType>" + n + "</DayType><DayWorking>1</DayWorking><WorkingTimes>" +
@@ -319,6 +291,9 @@ fs.writeFileSync(OUT_XML, `<?xml version="1.0" encoding="UTF-8" standalone="yes"
   <DurationFormat>9</DurationFormat>
   <WeekStartDay>1</WeekStartDay>
   <NewTasksAreManual>0</NewTasksAreManual>
+  <ExtendedAttributes>
+    <ExtendedAttribute><FieldID>${PERFORMED_BY}</FieldID><FieldName>Text1</FieldName><Alias>Performed by</Alias></ExtendedAttribute>
+  </ExtendedAttributes>
   <Calendars>
     <Calendar>
       <UID>1</UID>
@@ -335,12 +310,6 @@ ${[2, 3, 4, 5, 6].map(workDay).join("\n")}
   <Tasks>
 ${taskXml}
   </Tasks>
-  <Resources>
-${resourceXml}
-  </Resources>
-  <Assignments>
-${assignmentXml}
-  </Assignments>
 </Project>
 `);
 
@@ -432,5 +401,4 @@ ${body}
 console.log("Wrote " + path.relative(__dirname, OUT_XML) + " and " + path.relative(__dirname, OUT_HTML));
 console.log("  " + rows.filter((r) => r.summary).length + " groups, " + leaves.filter((r) => !r.milestone).length + " tasks, " +
   leaves.filter((r) => r.milestone).length + " milestones, " + leaves.reduce((n, r) => n + r.links.length, 0) + " links, all consistent");
-console.log("  " + resources.map((r) => r.name + " (peak " + r.peak + ")").join(", "));
 console.log("  Finish: week " + Math.max(...leaves.map((r) => r.finish)));
