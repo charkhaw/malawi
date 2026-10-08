@@ -41,9 +41,9 @@ in Section 3.2 covers all 22 categories.
 **ISO/IEC 27005:2022** is the risk management process: criteria, identification, analysis,
 evaluation, treatment, acceptance, and monitoring and review, in Section 4.
 
-**ISO/IEC 27001:2022** provides the management system and the Annex A controls. Inkript's information
-security management system is certified to ISO/IEC 27001, and the certificate is included in the
-Technical Proposal.
+**ISO/IEC 27001:2022** provides the management system and the Annex A controls. The information security
+management system of Inkript, the joint venture member responsible for the Information System, is
+certified to ISO/IEC 27001, and the certificate is included in the Technical Proposal.
 
 **What the plan protects first.** The most serious outcome in a card production facility is not data
 loss alone. It is a genuine card, correctly signed, produced for a person not entitled to it, because

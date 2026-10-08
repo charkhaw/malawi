@@ -22,12 +22,12 @@ output, and a phase that feeds the next is not closed until its output has been 
 
 | Workstream | Scope | Lead |
 |---|---|---|
-| Personalization and mailing equipment | Manufacture, factory acceptance, installation and commissioning of two laser personalization systems and two mailing and dispatch systems | Equipment manufacturer, under Inkript |
-| Application software | Card Personalization Management System, Data Preparation Service, Signing Service, Printer Control Service, Quality Control Management, Mailing and Dispatch Management System, Stock Control, monitoring and administration | Inkript |
-| NRIS integration | Interface specification, production-side development, integration testing | Inkript, with NRB developers building the NRIS side |
-| ICT infrastructure | Virtualization hosts, storage array, network, firewalls, hardware security modules, backup, workstations, secondary environment | Inkript |
-| Security | Security controls, establishment of the Document Signer key with e-Government, Security Operations Center | Inkript |
-| Polycarbonate cards | Card body design with NRB, manufacture, qualification on the laser systems, phased delivery | Card manufacturer, under Inkript |
+| Personalization and mailing equipment | Manufacture, factory acceptance, installation and commissioning of two laser personalization systems and two mailing and dispatch systems | Equipment manufacturer, under the Supplier |
+| Application software | Card Personalization Management System, Data Preparation Service, Signing Service, Printer Control Service, Quality Control Management, Mailing and Dispatch Management System, Stock Control, monitoring and administration | Supplier |
+| NRIS integration | Interface specification, production-side development, integration testing | Supplier, with NRB developers building the NRIS side |
+| ICT infrastructure | Virtualization hosts, storage array, network, firewalls, hardware security modules, backup, workstations, secondary environment | Supplier |
+| Security | Security controls, establishment of the Document Signer key with e-Government, Security Operations Center | Supplier |
+| Polycarbonate cards | Card body design with NRB, manufacture, qualification on the laser systems, phased delivery | Card manufacturer, under the Supplier |
 
 **Where the workstreams join.** Four points bind them together, and each is a scheduled event
 rather than an assumption: design approval in week 6, where every workstream's design is reviewed
@@ -287,7 +287,7 @@ Section 13.1.
 **R** responsible for doing the work, **A** accountable for its completion, one per activity,
 **C** consulted before it is done, **I** informed of the outcome.
 
-| Activity | Inkript | Equipment manufacturer | Card manufacturer | Facility works | NRB | e-Government |
+| Activity | Supplier | Equipment manufacturer | Card manufacturer | Facility works | NRB | e-Government |
 |---|---|---|---|---|---|---|
 | Discovery and NRIS data analysis | A, R | I | | C | C | |
 | High-Level and Low-Level Design | A, R | C | | C | C | I |
@@ -325,18 +325,18 @@ reviewed at every progress meeting from week 1.
 
 | ID | Risk | Likelihood | Impact | Mitigation | Owner |
 |---|---|---|---|---|---|
-| R1 | The NRIS side of the interface is not complete when integration must finish in weeks 23 and 24 | Medium | High | Interface Control Documents agreed at design approval; production side proven against simulators from week 7; each interface integrated as NRB delivers it from week 18; joint checkpoint every two weeks; the approved database connection described in System Architecture Section 7.5 available as a fallback where the Purchaser approves it | Inkript, with NRB |
-| R2 | The Document Signer certificate is not issued in time for pilot production in week 26 | Low | High | Certificate profile and procedure agreed with e-Government by week 6; key ceremony in week 16, six weeks before pilot production needs the certificate; issuing time confirmed in writing during design | Inkript, with e-Government |
-| R3 | Throughput with the full personalization content falls short of 2,000 cards per hour across two lines | Medium | High | Throughput of not less than 1,000 cards per hour per machine with the full personalization content confirmed by the equipment manufacturer before order; throughput measured at factory acceptance on the actual card body; reject causes tracked from pilot production | Inkript, with the equipment manufacturer |
-| R4 | The card body and the laser systems, supplied by two manufacturers, do not produce the required marking quality together | Medium | High | Qualification cards at the equipment factory by week 14; laser parameters set on the actual card body; factory acceptance run on production card stock | Inkript |
-| R5 | The equipment is not ready for factory acceptance in week 17 | Low | High | Manufacture started on order in week 3, with the design options fitted after approval, giving four weeks of float; progress inspections during manufacture | Inkript, with the equipment manufacturer |
-| R6 | Customs clearance extends beyond week 20 | Medium | High | Clearance documentation prepared during manufacture; clearing agent appointed by week 12; shipment arranged to arrive with time for clearance within the window; cards shipped separately with five weeks of float | Inkript |
+| R1 | The NRIS side of the interface is not complete when integration must finish in weeks 23 and 24 | Medium | High | Interface Control Documents agreed at design approval; production side proven against simulators from week 7; each interface integrated as NRB delivers it from week 18; joint checkpoint every two weeks; the approved database connection described in System Architecture Section 7.5 available as a fallback where the Purchaser approves it | Supplier, with NRB |
+| R2 | The Document Signer certificate is not issued in time for pilot production in week 26 | Low | High | Certificate profile and procedure agreed with e-Government by week 6; key ceremony in week 16, six weeks before pilot production needs the certificate; issuing time confirmed in writing during design | Supplier, with e-Government |
+| R3 | Throughput with the full personalization content falls short of 2,000 cards per hour across two lines | Medium | High | Throughput of not less than 1,000 cards per hour per machine with the full personalization content confirmed by the equipment manufacturer before order; throughput measured at factory acceptance on the actual card body; reject causes tracked from pilot production | Supplier, with the equipment manufacturer |
+| R4 | The card body and the laser systems, supplied by two manufacturers, do not produce the required marking quality together | Medium | High | Qualification cards at the equipment factory by week 14; laser parameters set on the actual card body; factory acceptance run on production card stock | Supplier |
+| R5 | The equipment is not ready for factory acceptance in week 17 | Low | High | Manufacture started on order in week 3, with the design options fitted after approval, giving four weeks of float; progress inspections during manufacture | Supplier, with the equipment manufacturer |
+| R6 | Customs clearance extends beyond week 20 | Medium | High | Clearance documentation prepared during manufacture; clearing agent appointed by week 12; shipment arranged to arrive with time for clearance within the window; cards shipped separately with five weeks of float | Supplier |
 | R7 | The server room is not handed over in week 14, or the production floor is not ready in week 20 | Medium | Medium | ICT Site Preparation Guide issued in week 4; server room built first; dedicated electrical connection needed by week 13; readiness inspection in week 18. A late server room moves the ICT track, which carries five weeks of float, and no milestone | Facility works |
-| R8 | Government Wide Area Network capacity cannot sustain replication to Blantyre within the five minute lag | Medium | Medium | Network requirements issued in week 4; link measured before deployment; replication compressed and tuned; lag monitored from week 18 so a shortfall is known eight weeks before failover is tested | Inkript, with NRB and e-Government |
-| R9 | NRIS records fail validation in numbers that disrupt production | Medium | Medium | Test data profiled during discovery; validation rules agreed at design; failing records held with a reason and reported to NRIS rather than printed | Inkript, with NRB |
-| R10 | A request is produced by both the existing printers and the new facility during transition | Low | High | Release to the new facility marked in NRIS and excluded from the existing middleware selection; tested in pilot production | NRB, with Inkript |
-| R11 | Trained NRB staff are not available in the numbers needed for operational independence in operational acceptance | Medium | Medium | Recommended numbers and prerequisites issued in week 2; nominations by week 20; operator training completed first within the training window | NRB, with Inkript |
-| R12 | Remote access for the equipment manufacturer's specialists is not arranged by go-live | Low | Medium | Arrangement agreed with NRB and e-Government during design; resident engineers on site throughout stabilization | Inkript |
+| R8 | Government Wide Area Network capacity cannot sustain replication to Blantyre within the five minute lag | Medium | Medium | Network requirements issued in week 4; link measured before deployment; replication compressed and tuned; lag monitored from week 18 so a shortfall is known eight weeks before failover is tested | Supplier, with NRB and e-Government |
+| R9 | NRIS records fail validation in numbers that disrupt production | Medium | Medium | Test data profiled during discovery; validation rules agreed at design; failing records held with a reason and reported to NRIS rather than printed | Supplier, with NRB |
+| R10 | A request is produced by both the existing printers and the new facility during transition | Low | High | Release to the new facility marked in NRIS and excluded from the existing middleware selection; tested in pilot production | NRB, with the Supplier |
+| R11 | Trained NRB staff are not available in the numbers needed for operational independence in operational acceptance | Medium | Medium | Recommended numbers and prerequisites issued in week 2; nominations by week 20; operator training completed first within the training window | NRB, with the Supplier |
+| R12 | Remote access for the equipment manufacturer's specialists is not arranged by go-live | Low | Medium | Arrangement agreed with NRB and e-Government during design; resident engineers on site throughout stabilization | Supplier |
 
 **The risk that most threatens the schedule is R1**, because the NRIS side of the interface is the
 one chain in Section 2.2 without float that runs through work outside the Supplier's control. The mitigation is to agree the

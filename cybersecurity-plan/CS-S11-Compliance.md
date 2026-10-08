@@ -2,7 +2,7 @@
 
 ## 11.1 Compliance and governance statement
 
-Inkript confirms that, if awarded the Contract, it will:
+The Proposer confirms that, if awarded the Contract, it will:
 
 - design, implement and maintain the security architecture required by Section VII clause 1.6, as described in System Architecture Section 10 and governed by this plan;
 - take the technical and organizational measures required by GCC 44.1, and flow those obligations down to its subcontractors, suppliers and manufacturers;
@@ -10,7 +10,7 @@ Inkript confirms that, if awarded the Contract, it will:
 - report monthly on the status of compliance with cyber security risk management, and on foreseeable cyber security risks and their mitigation, as required by SCC 19.6(d);
 - store and process citizen data only in Malawi, with NRB as data controller, and use synthetic or masked data for all work outside the production system;
 - comply with the Data Protection Act 2024, the Communications Act 2016, the National Registration Act 2015, the Electronic Transactions and Cybersecurity Act 2016, Malawi's National Digitalization Policy, the Project Environmental and Social Management Plan, the principles of the General Data Protection Regulation, and data minimization and purpose limitation;
-- maintain its ISO/IEC 27001 certification throughout the Contract; and
+- ensure that Inkript, the joint venture member responsible for the Information System, maintains its ISO/IEC 27001 certification throughout the Contract; and
 - assign security decisions as set out in Section 2.1, with residual risk accepted only by the Purchaser.
 
 ## 11.2 Requirements compliance matrix
