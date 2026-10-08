@@ -98,14 +98,6 @@ after("stab",
   { key: "facdocs", name: "Facility as-built drawings, test reports, manuals, warranties and maintenance schedules delivered", s: 31, d: 2, pred: ["comms"] });
 addLink("golive", "facdocs");
 
-/* Tasks that start in week 1 carry no link from the Effective Date. Project
-   starts a task without predecessors at the project start anyway, and it
-   opened this programme with those six tasks at zero duration while they
-   carried the link. Links from the Effective Date with a lag are kept. */
-for (const p of PLAN) {
-  if (p.pred) p.pred = p.pred.filter((x) => x !== "T");
-}
-
 /* ------------------------------------------- who performs each task */
 
 const IK = "Inkript", RM = "RME", EQ = "Equipment manufacturer", CM = "Card manufacturer";
@@ -232,7 +224,11 @@ const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, 
 const LINK_TYPE = { FF: 0, FS: 1, SF: 2, SS: 3 };
 const TENTHS_OF_MINUTE_PER_WEEK = 5 * 8 * 60 * 10;
 
-/* Element order follows the order Project 2013 writes, as in make-schedule.js. */
+/* Element order follows the order Project 2013 writes, as in make-schedule.js.
+   Each task also carries the fields Project itself stored for this schedule
+   when it saved Information-System-Schedule.mpp, among them the remaining
+   duration, so that nothing is left for Project to infer on import. Without
+   them, Project opened the tasks that start in week 1 at zero duration. */
 const taskXml = rows.map((r) => {
   const dur = hours(r.milestone ? 0 : r.finish - r.start);
   const start = r.milestone ? endAt(r.start) : startAt(r.start);
@@ -255,11 +251,30 @@ const taskXml = rows.map((r) => {
     "<ManualFinish>" + finish + "</ManualFinish>",
     "<ManualDuration>" + dur + "</ManualDuration>",
     "<DurationFormat>9</DurationFormat>",
+    "<ResumeValid>0</ResumeValid>",
+    "<EffortDriven>0</EffortDriven>",
+    "<Recurring>0</Recurring>",
+    "<OverAllocated>0</OverAllocated>",
+    "<Estimated>0</Estimated>",
     "<Milestone>" + (r.milestone ? 1 : 0) + "</Milestone>",
     "<Summary>" + (r.summary ? 1 : 0) + "</Summary>",
+    "<IsSubproject>0</IsSubproject>",
+    "<IsSubprojectReadOnly>0</IsSubprojectReadOnly>",
+    "<ExternalTask>0</ExternalTask>",
+    "<FixedCostAccrual>3</FixedCostAccrual>",
+    "<PercentComplete>0</PercentComplete>",
+    "<PercentWorkComplete>0</PercentWorkComplete>",
+    "<RemainingDuration>" + dur + "</RemainingDuration>",
     "<ConstraintType>0</ConstraintType>",
+    "<CalendarUID>-1</CalendarUID>",
+    "<LevelAssignments>1</LevelAssignments>",
+    "<LevelingCanSplit>1</LevelingCanSplit>",
+    "<LevelingDelay>0</LevelingDelay>",
+    "<LevelingDelayFormat>8</LevelingDelayFormat>",
+    "<IgnoreResourceCalendar>0</IgnoreResourceCalendar>",
   ];
   if (r.contract) lines.push("<Notes>Contractual milestone in the Implementation Schedule</Notes>");
+  lines.push("<HideBar>0</HideBar>", "<Rollup>0</Rollup>", "<PhysicalPercentComplete>0</PhysicalPercentComplete>", "<EarnedValueMethod>0</EarnedValueMethod>");
   for (const l of r.links || []) {
     lines.push(
       "<PredecessorLink>" +
@@ -290,13 +305,29 @@ fs.writeFileSync(OUT_XML, `<?xml version="1.0" encoding="UTF-8" standalone="yes"
   <Title>Integrated Programme of Works, MW-PPPC-546386-GO-RFB</Title>
   <ScheduleFromStart>1</ScheduleFromStart>
   <StartDate>${startAt(0)}</StartDate>
+  <FinishDate>${endAt(WEEKS)}</FinishDate>
   <CalendarUID>1</CalendarUID>
   <DefaultStartTime>08:00:00</DefaultStartTime>
   <DefaultFinishTime>17:00:00</DefaultFinishTime>
   <MinutesPerDay>480</MinutesPerDay>
   <MinutesPerWeek>2400</MinutesPerWeek>
   <DaysPerMonth>20</DaysPerMonth>
+  <DefaultTaskType>0</DefaultTaskType>
+  <DefaultFixedCostAccrual>2</DefaultFixedCostAccrual>
   <DurationFormat>9</DurationFormat>
+  <WorkFormat>2</WorkFormat>
+  <EditableActualCosts>0</EditableActualCosts>
+  <HonorConstraints>1</HonorConstraints>
+  <EarnedValueMethod>0</EarnedValueMethod>
+  <InsertedProjectsLikeSummary>0</InsertedProjectsLikeSummary>
+  <MultipleCriticalPaths>0</MultipleCriticalPaths>
+  <NewTasksEffortDriven>0</NewTasksEffortDriven>
+  <NewTasksEstimated>1</NewTasksEstimated>
+  <SplitsInProgressTasks>1</SplitsInProgressTasks>
+  <SpreadActualCost>0</SpreadActualCost>
+  <SpreadPercentComplete>0</SpreadPercentComplete>
+  <TaskUpdatesResource>1</TaskUpdatesResource>
+  <FiscalYearStart>0</FiscalYearStart>
   <WeekStartDay>1</WeekStartDay>
   <NewTasksAreManual>0</NewTasksAreManual>
   <ExtendedAttributes>
