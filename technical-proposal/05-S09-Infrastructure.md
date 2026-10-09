@@ -161,7 +161,7 @@ Network connection.
 
 | Element | Quantity | Role |
 |---|---|---|
-| Virtualization host | 1 | Standalone, with the same processors and memory as the primary hosts, and internal storage of not less than 20 TB usable after RAID. It runs 9 virtual machines: the secondary copy of the database, kept current by database replication; a domain controller, kept current by directory replication; and standby copies of the integration gateway, application server, management and backup server virtual machines, one of each, and of the three security monitoring virtual machines, kept current by virtual machine replication |
+| Virtualization host | 1 | Standalone, with the same processors and memory as the primary hosts, and internal storage of not less than 20 TB usable after RAID. It runs 10 virtual machines: the secondary copy of the database, kept current by database replication; a domain controller, kept current by directory replication; and standby copies of the integration gateway, application server, load balancer, management and backup server virtual machines, one of each, and of the three security monitoring virtual machines, kept current by virtual machine replication |
 | Backup repository | 1 | Encrypted, receiving the backup copies replicated from the primary site |
 | Immutable backup storage | 1 | The offsite copy of the backups, not less than 40 TB usable, encrypted |
 | Next generation firewall | 1 | Standalone, providing zone policy and intrusion prevention for the secondary environment |
@@ -360,7 +360,9 @@ to the primary site.
 The secondary environment is functional and operational at Operational Acceptance, as a warm
 standby. On the internal storage of its single host it holds a running replicated copy of the
 production database, a running domain controller, and standby copies of the service virtual
-machines kept current by replication and started on failover. Beside the host are the offsite
+machines kept current by replication and started on failover. Among them is a standby copy of the load
+balancer, started with the same configuration and virtual address, so clients reach the application at
+the secondary site without being reconfigured. Beside the host are the offsite
 backup copies and the replicated hardware security module. Recovery therefore does not depend on
 rebuilding from installation media.
 
@@ -411,7 +413,7 @@ delivered under the facility works.
 | Storage array, primary site | 1 | Enterprise storage array, dual controllers with non-disruptive failover, redundant power, a protected drive pool, RAID 6 or the manufacturer's equivalent, encryption at rest, not less than 20 TB usable after RAID |
 | Backup repository, primary site | 1 | Encrypted, managed by Veeam Backup & Replication |
 | Immutable backup storage, primary site | 1 | Not less than 40 TB usable, encrypted, with retention that no administrator can override |
-| Virtualization host, secondary site | 1 | Standalone enterprise rack server, two processors of 24 cores and 256 GB of memory, redundant power, internal storage of not less than 20 TB usable after RAID, running the 9 virtual machines of the secondary environment at the Purchaser's disaster recovery data center |
+| Virtualization host, secondary site | 1 | Standalone enterprise rack server, two processors of 24 cores and 256 GB of memory, redundant power, internal storage of not less than 20 TB usable after RAID, running the 10 virtual machines of the secondary environment at the Purchaser's disaster recovery data center |
 | Backup repository, secondary site | 1 | Encrypted, receiving the backup copies replicated from the primary site |
 | Immutable backup storage, secondary site | 1 | The offsite copy of the backups, not less than 40 TB usable, encrypted |
 | Core switches, primary site | 2 | Layer 3, redundant pair, carrying the zone VLANs, including the Storage Zone |
