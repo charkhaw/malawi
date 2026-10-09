@@ -12,9 +12,8 @@
 | Cybersecurity and PKI Specialist | Security impact of changes; incident manager for emergency changes until handover |
 | NRB process owners, ICT manager and trainers | Counterparts who take over each process, the change-control roles and the training of new staff |
 
-The Training and Change Management Specialist meets Section VII clause 2.4.1.11: a degree in ICT,
-education or human resource development, trainer certification, change management certification,
-Prosci preferred, and at least five years delivering ICT training to government staff, operators and
+The Training and Change Management Specialist holds a degree in ICT, education or human resource
+development and has at least five years delivering ICT training to government staff, operators and
 technical administrators. The CV and certificates are provided with the Key Personnel forms.
 
 ## 6.2 Capacity building and knowledge transfer

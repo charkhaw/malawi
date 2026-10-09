@@ -105,7 +105,7 @@ remaining hours and does not stop production.
 
 | Activity | Frequency | Basis |
 |---|---|---|
-| Servicing of the personalization and mailing equipment: optics, cooling, compressors, feeders and card transport | At the equipment manufacturer's intervals | Manufacturer's maintenance schedule |
+| Servicing of the personalization and mailing equipment: optics, cooling, feeders and card transport | At the equipment manufacturer's intervals | Manufacturer's maintenance schedule |
 | Laser calibration | At the manufacturer's intervals and when calibration logs show drift | System Architecture Section 3.8 |
 | Backup verification and restoration testing | On the backup schedule | System Architecture Section 12.3 |
 | Security patching | On a defined cycle, with critical patches applied out of cycle | System Architecture Section 10.5 |

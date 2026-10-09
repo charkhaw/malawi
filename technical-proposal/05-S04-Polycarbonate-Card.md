@@ -100,7 +100,7 @@ Because the card is chipless, the signed QR code is its only cryptographically v
 
 ## 4.6 Standards compliance and laboratory testing
 
-Cards comply with:
+Cards are specified to:
 
 | Standard | Scope |
 |---|---|
@@ -108,9 +108,9 @@ Cards comply with:
 | ISO/IEC 10373-1 | Test methods |
 | ISO/IEC 24789-1 and 24789-2 | Card service life and durability |
 
-Not fewer than two laboratory test reports are provided, from an independent international laboratory
-holding ISO/IEC 17025 accreditation with a scope covering these standards, dated within the last
-three years, and covering:
+Not fewer than two laboratory test reports, from an independent international laboratory holding
+ISO/IEC 17025 accreditation with a scope covering these standards, are provided before the first card
+delivery, covering:
 
 | # | Test |
 |---|---|

@@ -29,11 +29,10 @@ Inkript confirms that, if awarded the Contract, it will:
 ## 7.3 Evidence of past implementation
 
 **Attached to the Technical Proposal.** The CV and certificates of the Training and Change Management
-Specialist, including the change management certification.
+Specialist.
 
 **Past implementation.** [Inkript to complete with two or three references and attach the client
-letters. The references in Cybersecurity Risk Management Plan Section 11.3 may be used, described here
-by their transition and change scope.]
+letters, described by their transition and change scope.]
 
 | Project, client, country and period | Transition and change scope comparable to this Contract | Evidence attached |
 |---|---|---|
