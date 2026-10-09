@@ -44,7 +44,7 @@ The numbers of staff are those recommended in Preliminary Project Plan Section 3
 | Registration and ordering offices | Cards arrive batched by ordering office, with their status in the document tracker | Through NRB | NRB's announcement of live production |
 
 **Communication.** NRB leads communication with its own staff, with the registration and ordering
-offices and with the public, and decides when live production is announced. Inkript provides the
+offices and with the public, and decides when live production is announced. The Supplier provides the
 content and briefings NRB needs, and takes part in stakeholder engagement when asked, under GCC 9.13.
-Inkript keeps NRB management and the NRIS team informed through the project bodies in Section 3.1,
+The Supplier keeps NRB management and the NRIS team informed through the project bodies in Section 3.1,
 and makes no public statement.

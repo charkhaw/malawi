@@ -23,7 +23,6 @@ Change has three meanings in this Contract, and the plan keeps them apart:
 | | Alignment of operational and process change management | Sections 2.1 and 3.1 |
 | 1. Alignment with international frameworks | Change Management Plan mapped to NIST CSF | Sections 1.2 and 1.3 |
 | | Framework Compliance Matrix | Section 1.3 |
-| | Evidence of past implementation | Section 7.3 |
 | 2. Risk identification, mitigation and response | Change and transition risks | Section 4.3 |
 | | Compliance and Governance Statement | Sections 3.1 and 7.1 |
 | 3. Resources, skills, duration and capacity building | Resource and Skill Matrix | Section 6.1 |
