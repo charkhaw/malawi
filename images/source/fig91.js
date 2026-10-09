@@ -3,6 +3,7 @@
 // firewall pair; the Storage Zone, not routed, on the platform; one hardware security module at
 // each site; the secondary site without a storage array. The personalization and mailing lines,
 // the workstations and the management interfaces connect through one stack of edge switches.
+// 9 October 2026: security monitoring runs on three virtual machines.
 
 // Bands, top to bottom: zones above the firewall, the firewall pair, production zones,
 // infrastructure zones, platform, legend.
@@ -52,7 +53,7 @@ F.text(650, A + 180, ["Connected through the", "edge switch stack"], { size: 14,
 Z(810, A, 550, AH, ["MANAGEMENT AND MONITORING ZONE"], 90);
 F.box(830, A + 65, 270, 62, ["Management and administrative", "access host (x1)"]);
 F.box(1120, A + 65, 220, 62, ["Domain", "controllers (x2)"]);
-F.box(830, A + 145, 270, 62, ["Security monitoring (x1)"]);
+F.box(830, A + 145, 270, 62, ["Security monitoring (x3)"]);
 
 F.line([[170, A + AH], [170, FW]]);
 F.label(182, A + AH + 21, ["NRIS exchange, mutual TLS"], "start");
