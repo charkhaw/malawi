@@ -115,6 +115,7 @@ within the network zone appropriate to its function:
 |---|---|---|---|
 | Integration gateway | The NRIS interface of the Data Preparation Service, described in Section 7.1 | External Integration Zone | 1 |
 | Application server | Card Personalization Management, Data Preparation, Quality Control Management, Stock Control and Card Accountability, Mailing and Dispatch Management System, and Monitoring, Reporting and Analytics | Application Zone | 2 |
+| Load balancer | Distributes application and administrative traffic across the two application servers, with health checks, as an active-passive pair sharing one virtual address | Application Zone | 2 |
 | Signing Service | Signing Service, the sole client of the hardware security modules | Application Zone | 1 |
 | Database | Clustered database, two nodes, one on each database host | Database Zone | 2 |
 | Printer control | Printer Control Service and the interface to the manufacturer's personalization control software, for both personalization lines | Machine Control Zone | 1 |
@@ -124,7 +125,9 @@ within the network zone appropriate to its function:
 | Backup server | Veeam Backup & Replication: backup scheduling, cataloging, replication to the secondary site and restoration | Backup Zone | 1 |
 
 **Both application servers are active.** Application and administrative traffic is load balanced
-across the two application server instances, which the cluster keeps on different application hosts.
+across the two application server instances by two load balancer virtual machines, an active-passive
+pair on different application hosts, and the cluster also keeps the two instances on different
+application hosts.
 Each instance is sized to carry the whole load, so that when one is lost the other takes its traffic
 at once, while the cluster restarts the lost instance on the surviving host.
 
@@ -183,7 +186,7 @@ standby host has no other host to share them with.
 
 These run on two virtual machines on the hosts of the application cluster: one for development, and
 one shared by training and user acceptance testing, which run the same released version. With them,
-the primary site runs 14 virtual machines: the 12 production virtual machines in the inventory above
+the primary site runs 16 virtual machines: the 14 production virtual machines in the inventory above
 and these 2. They sit on a segment of their own within the Application Zone, which the firewall pair
 separates from every production service, as described in Section 9.2. Running them on the
 production platform keeps them on the same software and versions as production and under the same

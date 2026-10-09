@@ -2,7 +2,7 @@
 
 ## 7.1 Compliance statement
 
-Inkript confirms that, if awarded the Contract, it will:
+The Proposer confirms that, if awarded the Contract, it will:
 
 - provide the Training and Change Management Specialist required by Section VII clause 2.4.1.11 throughout supply and installation;
 - deliver the transition in the sequence and through the readiness gates of Section 4, without moving a contractual milestone;
@@ -25,18 +25,3 @@ Inkript confirms that, if awarded the Contract, it will:
 | **Operational acceptance tests 13, 16 and 17.** Multi-shift operation, operational independence, final acceptance demonstration | Complies. Section 4.2; Preliminary Project Plan Section 4.6 |
 | **GCC 9.13.** Stakeholder engagement | Complies. Section 2.2 |
 | **GCC 39.1.5.** Requirements freeze | Complies. Section 5.3 |
-
-## 7.3 Evidence of past implementation
-
-**Attached to the Technical Proposal.** The CV and certificates of the Training and Change Management
-Specialist, including the change management certification.
-
-**Past implementation.** [Inkript to complete with two or three references and attach the client
-letters. The references in Cybersecurity Risk Management Plan Section 11.3 may be used, described here
-by their transition and change scope.]
-
-| Project, client, country and period | Transition and change scope comparable to this Contract | Evidence attached |
-|---|---|---|
-| [Reference 1] | [For example: cutover from a legacy issuance process, operator and administrator training, handover of operation to a government agency, change control in operation] | [Client letter] |
-| [Reference 2] | | |
-| [Reference 3] | | |

@@ -53,9 +53,9 @@ Section 2.9. R10 and R11 are in that register; R13 and R14 are added by this pla
 
 | Risk | Rating | Mitigation | Owner |
 |---|---|---|---|
-| **R10** A request is produced by both the existing printers and the new facility during transition | Low likelihood, high impact | Release to the new facility marked in NRIS and excluded from the middleware selection; tested in pilot production | NRB, with Inkript |
-| **R11** Trained NRB staff are not available in the numbers needed for operational independence | Medium likelihood, medium impact | Recommended numbers issued in week 2; nominations by week 20; operators trained first | NRB, with Inkript |
-| **R13** Staff return to former practice, or work around the new controls, once the Supplier steps back | Medium likelihood, medium impact | Procedures written with the staff who use them; NRB trainers; operational acceptance tests 13 and 16; daily review during stabilization; adoption issues in the monthly service review | NRB operations manager, with Inkript |
+| **R10** A request is produced by both the existing printers and the new facility during transition | Low likelihood, high impact | Release to the new facility marked in NRIS and excluded from the middleware selection; tested in pilot production | NRB, with the Supplier |
+| **R11** Trained NRB staff are not available in the numbers needed for operational independence | Medium likelihood, medium impact | Recommended numbers issued in week 2; nominations by week 20; operators trained first | NRB, with the Supplier |
+| **R13** Staff return to former practice, or work around the new controls, once the Supplier steps back | Medium likelihood, medium impact | Procedures written with the staff who use them; NRB trainers; operational acceptance tests 13 and 16; daily review during stabilization; adoption issues in the monthly service review | NRB operations manager, with the Supplier |
 | **R14** An unapproved or faulty change stops production or weakens a control | Low likelihood, high impact | Change procedure in Section 5.2; drift detection; changes outside the production day; rollback plan for every change; requirements freeze | Change board |
 
 The risk that NRB cannot operate the security controls after handover is C15 in Cybersecurity Risk

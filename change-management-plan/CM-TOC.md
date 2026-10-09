@@ -33,4 +33,3 @@
 ### 7. Compliance
 - 7.1 Compliance statement
 - 7.2 Requirements compliance matrix
-- 7.3 Evidence of past implementation

@@ -17,10 +17,12 @@ Each line comprises:
 | Verification cameras and scanners | Read and check the personalized card in line |
 | Card reject module | Diverts cards failing verification out of the production path |
 | Cooling system | Maintains laser operating temperature under continuous industrial duty |
-| Air compressor system | Supplies the pneumatic transport and handling functions |
 | Card stacker | Receives verified cards on completion, with a 600 card capacity |
 | Industrial control PC | Runs the machine software and drives the laser stations |
 | Emergency stop buttons | Positioned around the machine, so that the operator can reach one from every point at the line |
+
+The machines are configured for laser personalization without inkjet printing and need no compressed
+air supply.
 
 The marking subsystem is fully integrated into the machine rather than assembled from separate
 units. It comprises the dedicated laser marking unit, the power supply and control PC for laser and
