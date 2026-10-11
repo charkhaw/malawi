@@ -39,7 +39,7 @@ is how the 15 percent annual growth is absorbed across a ten to fifteen year ret
 storage array shared by the four virtualization hosts of the primary site. The platform is Windows
 Server with Hyper-V, and the hosts form two failover clusters over the shared storage, an application
 cluster and a database cluster of two hosts each. The array has two controllers
-with non-disruptive failover between them, redundant power, and solid-state drives in a protected
+with non-disruptive failover between them, redundant power, and a protected drive
 pool, RAID 6 or the manufacturer's equivalent, which keeps the data available through the failure of
 any two drives. Data on the array is encrypted at rest. Snapshots on the array are operational aids,
 such as a rollback point before a change, and are not backups. Backups are written to the separate
@@ -66,9 +66,9 @@ the non-production environments are the first workloads stopped to make room for
 
 | Element | Quantity | Role |
 |---|---|---|
-| Application hosts | 2 | Two processors of 24 cores and 256 GB of memory each. Application cluster with automated failover over the storage array, carrying the integration, application, machine control, management, directory, security and backup virtual machines and the non-production environments, each sized to run every production virtual machine of the cluster alone |
+| Application hosts | 2 | Two processors of 24 cores and 256 GB of memory each. Application cluster with automated failover over the storage array, carrying the integration, application, load balancer, machine control, management, directory, security and backup virtual machines and the non-production environments, each sized to run every production virtual machine of the cluster alone |
 | Database hosts | 2 | Two processors of 24 cores and 256 GB of memory each. Database cluster over the storage array, one database node on each host |
-| Storage array | 1 | Holds the virtual machines and their data, not less than 20 TB usable after RAID, with dual controllers, redundant power and solid-state drives in a protected pool |
+| Storage array | 1 | Holds the virtual machines and their data, not less than 20 TB usable after RAID, with dual controllers, redundant power and a protected drive pool |
 | Backup repository | 1 | Encrypted, managed by Veeam Backup & Replication, holding the restore points used for routine restoration |
 | Immutable backup storage | 1 | Not less than 40 TB usable, encrypted, covering retention cycles, with copies that no administrator can alter or delete before their retention ends |
 | Core switches | 2 | Layer 3, redundant pair carrying the zone VLANs, including the Storage Zone |
@@ -121,7 +121,7 @@ within the network zone appropriate to its function:
 | Printer control | Printer Control Service and the interface to the manufacturer's personalization control software, for both personalization lines | Machine Control Zone | 1 |
 | Management | Administration and Access Control, administrative access host, and the mail relay that sends alert emails | Management and Monitoring Zone | 1 |
 | Directory | Domain controllers: the directory, authentication and name resolution for the estate, and its common time source. The two run on different application hosts and replicate to each other, and a third runs at the secondary site | Management and Monitoring Zone | 2 |
-| Security monitoring | Security information and event management, log aggregation, endpoint management | Management and Monitoring Zone | 1 |
+| Security monitoring | Security information and event management on three virtual machines, for indexing, management and the dashboard, with log aggregation and endpoint management | Management and Monitoring Zone | 3 |
 | Backup server | Veeam Backup & Replication: backup scheduling, cataloging, replication to the secondary site and restoration | Backup Zone | 1 |
 
 **Both application servers are active.** Application and administrative traffic is load balanced
@@ -161,7 +161,7 @@ Network connection.
 
 | Element | Quantity | Role |
 |---|---|---|
-| Virtualization host | 1 | Standalone, with the same processors and memory as the primary hosts, and internal storage of not less than 20 TB usable after RAID. It runs 7 virtual machines: the secondary copy of the database, kept current by database replication; a domain controller, kept current by directory replication; and standby copies, one of each, of the integration gateway, application server, management, security monitoring and backup server virtual machines, kept current by virtual machine replication |
+| Virtualization host | 1 | Standalone, with the same processors and memory as the primary hosts, and internal storage of not less than 20 TB usable after RAID. It runs 10 virtual machines: the secondary copy of the database, kept current by database replication; a domain controller, kept current by directory replication; and standby copies of the integration gateway, application server, load balancer, management and backup server virtual machines, one of each, and of the three security monitoring virtual machines, kept current by virtual machine replication |
 | Backup repository | 1 | Encrypted, receiving the backup copies replicated from the primary site |
 | Immutable backup storage | 1 | The offsite copy of the backups, not less than 40 TB usable, encrypted |
 | Next generation firewall | 1 | Standalone, providing zone policy and intrusion prevention for the secondary environment |
@@ -186,7 +186,7 @@ standby host has no other host to share them with.
 
 These run on two virtual machines on the hosts of the application cluster: one for development, and
 one shared by training and user acceptance testing, which run the same released version. With them,
-the primary site runs 16 virtual machines: the 14 production virtual machines in the inventory above
+the primary site runs 18 virtual machines: the 16 production virtual machines in the inventory above
 and these 2. They sit on a segment of their own within the Application Zone, which the firewall pair
 separates from every production service, as described in Section 9.2. Running them on the
 production platform keeps them on the same software and versions as production and under the same
@@ -360,7 +360,9 @@ to the primary site.
 The secondary environment is functional and operational at Operational Acceptance, as a warm
 standby. On the internal storage of its single host it holds a running replicated copy of the
 production database, a running domain controller, and standby copies of the service virtual
-machines kept current by replication and started on failover. Beside the host are the offsite
+machines kept current by replication and started on failover. Among them is a standby copy of the load
+balancer, started with the same configuration and virtual address, so clients reach the application at
+the secondary site without being reconfigured. Beside the host are the offsite
 backup copies and the replicated hardware security module. Recovery therefore does not depend on
 rebuilding from installation media.
 
@@ -408,10 +410,10 @@ delivered under the facility works.
 |---|---|---|
 | Application hosts, primary site | 2 | Enterprise rack servers, two processors of 24 cores and 256 GB of memory each, redundant power, redundant paths to both controllers of the storage array with multipath, clustered with automated failover, each sized to run every production virtual machine of the application cluster alone, and carrying the non-production environments |
 | Database hosts, primary site | 2 | Enterprise rack servers, two processors of 24 cores and 256 GB of memory each, redundant power, redundant paths to both controllers of the storage array with multipath, clustered, one database node on each |
-| Storage array, primary site | 1 | Enterprise storage array, dual controllers with non-disruptive failover, redundant power, solid-state drives in a protected pool, RAID 6 or the manufacturer's equivalent, encryption at rest, not less than 20 TB usable after RAID |
+| Storage array, primary site | 1 | Enterprise storage array, dual controllers with non-disruptive failover, redundant power, a protected drive pool, RAID 6 or the manufacturer's equivalent, encryption at rest, not less than 20 TB usable after RAID |
 | Backup repository, primary site | 1 | Encrypted, managed by Veeam Backup & Replication |
 | Immutable backup storage, primary site | 1 | Not less than 40 TB usable, encrypted, with retention that no administrator can override |
-| Virtualization host, secondary site | 1 | Standalone enterprise rack server, two processors of 24 cores and 256 GB of memory, redundant power, internal storage of not less than 20 TB usable after RAID, running the 7 virtual machines of the secondary environment at the Purchaser's disaster recovery data center |
+| Virtualization host, secondary site | 1 | Standalone enterprise rack server, two processors of 24 cores and 256 GB of memory, redundant power, internal storage of not less than 20 TB usable after RAID, running the 10 virtual machines of the secondary environment at the Purchaser's disaster recovery data center |
 | Backup repository, secondary site | 1 | Encrypted, receiving the backup copies replicated from the primary site |
 | Immutable backup storage, secondary site | 1 | The offsite copy of the backups, not less than 40 TB usable, encrypted |
 | Core switches, primary site | 2 | Layer 3, redundant pair, carrying the zone VLANs, including the Storage Zone |

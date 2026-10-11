@@ -27,13 +27,13 @@ controller, the secondary copy of the database and standby copies of the service
 | Function | License metric | Quantity | Serves |
 |---|---|---|---|
 | Security information and event management | Event volume | The full event volume of the estate | Collection and correlation across all sources, and the Security Operations Center |
-| Endpoint detection and response | Per endpoint | 33: the 5 hosts; 18 virtual machines, being the 14 production and 2 non-production virtual machines at the primary site, and the domain controller and the database copy at the secondary site; and the 10 workstations. The standby copies at the secondary site run only in place of the virtual machines they copy | Endpoint protection and anti-malware |
+| Endpoint detection and response | Per endpoint | 35: the 5 hosts; 20 virtual machines, being the 16 production and 2 non-production virtual machines at the primary site, and the domain controller and the database copy at the secondary site; and the 10 workstations. The standby copies at the secondary site run only in place of the virtual machines they copy | Endpoint protection and anti-malware |
 | Privileged access management | Per privileged user | Every administrator and privileged account | Privileged access issued for a session and a purpose |
 | Multi-factor authentication | Per user | Every administrator and operator | Authentication of administrators and operators |
 | Vulnerability scanning | Per scanned asset | All hosts, virtual machines, network devices and workstations | Scheduled vulnerability scanning and compliance reporting |
 | Monitoring and log aggregation | Per monitored node | All infrastructure and application sources | Monitoring, alerting, ticket generation and log aggregation |
 | Bulk SMS service | Per message, in a three-year bundle | The alert volume of the estate over three years | Delivery of alerts by SMS to the NRB staff designated for each type of alert |
-| Backup and recovery, Veeam Backup & Replication | Per protected workload | 14, the production virtual machines at the primary site, with configuration and audit logs, replicated to the secondary site | Scheduled backup, immutable retention and restoration |
+| Backup and recovery, Veeam Backup & Replication | Per protected workload | 16, the production virtual machines at the primary site, with configuration and audit logs, replicated to the secondary site | Scheduled backup, immutable retention and restoration |
 | Next generation firewall security subscriptions | Per appliance | 3: the high availability pair at the primary site and the firewall at the secondary site | Intrusion prevention signatures and threat updates |
 | Storage array and network device support and firmware | Per device | The storage array, 5 switches and 2 firewalls at the primary site, and 1 switch and 1 firewall at the secondary site | Manufacturer support, replacement and firmware updates |
 | Hardware security module support and client software | Per module | 2, one at each site | Firmware updates, and the client software through which the Signing Service reaches the modules |
