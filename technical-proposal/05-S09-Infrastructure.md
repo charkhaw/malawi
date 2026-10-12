@@ -429,14 +429,11 @@ delivered under the facility works.
 
 | Item | Coverage |
 |---|---|
-| Server operating system and hypervisor | All hosts, primary and secondary. One platform provides both, with failover clustering of the application hosts and of the database hosts |
+| Server operating system and hypervisor | All hosts, primary and secondary: Windows Server Datacenter on the application hosts and the secondary host, and Windows Server Standard on the database hosts. One platform provides both, with failover clustering of the application hosts and of the database hosts |
 | Virtual machine operating systems | All virtual machines |
-| Windows Server client access licenses | Every person holding an account on the System |
 | Workstation operating system | The operator and administrative workstations |
-| Backup storage operating system | The backup repository and the immutable backup storage at each site |
 | Database platform, SQL Server | The clustered database at the primary site and its secondary copy at the secondary site, with SQL Server Developer for the non-production environments |
 | Backup and recovery platform, Veeam Backup & Replication | All protected systems at the primary site, with replication of the backups to the secondary site |
-| Security information and event management | All sources across the estate |
 | Endpoint detection and response | All servers, virtual machines and workstations |
 | Privileged access management | All administrative and privileged accounts |
 | Multi-factor authentication | All administrators and operators |
@@ -444,7 +441,7 @@ delivered under the facility works.
 | Next generation firewall security subscriptions | All three firewalls |
 | Storage array and network device support and firmware | The storage array, all switches and all firewalls |
 | Hardware security module client software and support | Both modules, and the Signing Service that reaches them |
-| Monitoring and log aggregation | All infrastructure and application sources |
+| Monitoring, log aggregation and security information and event management: MDR / MSOC | All infrastructure, application and security sources across the estate |
 | SMS alert service | Subscription to a bulk SMS provider in Malawi for the delivery of alerts, for three years |
 | Application software | The services described in Section 6 |
 
