@@ -4,12 +4,15 @@
 // each site; the secondary site without a storage array. The personalization and mailing lines,
 // the workstations and the management interfaces connect through one stack of edge switches.
 // 9 October 2026: security monitoring runs on three virtual machines.
+// 12 October 2026: load balancers become a pair of appliances, the database runs on one virtual
+// machine, security monitoring runs on four virtual machines for the MDR / MSOC service, and the
+// secondary site has a load balancer appliance.
 
 // Bands, top to bottom: zones above the firewall, the firewall pair, production zones,
 // infrastructure zones, platform, legend.
 const A = 270, AH = 230;
 const FW = A + AH + 40;
-const C = FW + 60 + 50, CH = 325;
+const C = FW + 60 + 50, CH = 400;
 const D = C + CH + 30, DH = 135;
 const P = D + DH + 30, PH = 225;
 const FB = P + PH + 25;
@@ -31,7 +34,7 @@ F.text(1160, 34, ["Secondary environment,", "Purchaser's disaster recovery data 
 F.box(962, 76, 210, 54, ["Host (x1): standby", "services, database copy"], "grey", { size: 15 });
 F.box(1182, 76, 176, 54, ["Hardware security", "module, replicated"], "grey", { size: 15 });
 F.box(962, 142, 210, 54, ["Backup repository and", "immutable storage"], "grey", { size: 15 });
-F.box(1182, 142, 176, 54, ["Firewall and", "core switch"], "grey", { size: 15 });
+F.box(1182, 142, 176, 54, ["Firewall, core switch,", "load balancer"], "grey", { size: 14 });
 F.line([[780, 65], [940, 65]]);
 F.label(860, 88, ["Replication and", "backup copies,", "encrypted"]);
 F.box(360, 130, 240, 62, ["Perimeter firewall", "(NRB and e-Government)"], "double", { size: 16 });
@@ -53,7 +56,7 @@ F.text(650, A + 180, ["Connected through the", "edge switch stack"], { size: 14,
 Z(810, A, 550, AH, ["MANAGEMENT AND MONITORING ZONE"], 90);
 F.box(830, A + 65, 270, 62, ["Management and administrative", "access host (x1)"]);
 F.box(1120, A + 65, 220, 62, ["Domain", "controllers (x2)"]);
-F.box(830, A + 145, 270, 62, ["Security monitoring (x3)"]);
+F.box(830, A + 145, 270, 62, ["Security monitoring (x4),", "MDR / MSOC"]);
 
 F.line([[170, A + AH], [170, FW]]);
 F.label(182, A + AH + 21, ["NRIS exchange, mutual TLS"], "start");
@@ -66,18 +69,20 @@ F.box(40, FW, 1320, 60, ["Next generation firewall pair: zone policy, intrusion 
 
 // Production zones below the firewall
 Z(40, C, 520, CH, ["APPLICATION ZONE"], 40);
-F.box(60, C + 60, 230, 62, ["Application server (x2),", "load balanced"]);
-F.box(310, C + 60, 230, 62, ["Signing Service (x1)"]);
-F.box(60, C + 145, 230, 160, [], "dashed");
-F.box(75, C + 160, 200, 76, ["Development (x1),", "training and user", "acceptance testing (x1)"], "solid", { size: 14.5 });
-F.text(175, C + 265, ["Non-production segment,", "masked data only"], { size: 14, italic: true });
-F.box(310, C + 145, 230, 160, [], "dashed");
-F.line([[425, C + 122], [425, C + 167]]);
-F.box(335, C + 167, 180, 62, ["Hardware security", "module (x1)"], "grey", { size: 16 });
-F.text(425, C + 265, ["Segment reached by the", "Signing Service only"], { size: 14, italic: true });
+F.box(60, C + 60, 230, 62, ["Load balancer pair (x2),", "appliances, 10 Gbps"], "grey", { size: 15.5 });
+F.line([[175, C + 122], [175, C + 140]], { end: true });
+F.box(60, C + 140, 230, 62, ["Application server (x2),", "load balanced"]);
+F.box(310, C + 140, 230, 62, ["Signing Service (x1)"]);
+F.box(60, C + 225, 230, 160, [], "dashed");
+F.box(75, C + 240, 200, 76, ["Development (x1),", "training and user", "acceptance testing (x1)"], "solid", { size: 14.5 });
+F.text(175, C + 345, ["Non-production segment,", "masked data only"], { size: 14, italic: true });
+F.box(310, C + 225, 230, 160, [], "dashed");
+F.line([[425, C + 202], [425, C + 247]]);
+F.box(335, C + 247, 180, 62, ["Hardware security", "module (x1)"], "grey", { size: 16 });
+F.text(425, C + 345, ["Segment reached by the", "Signing Service only"], { size: 14, italic: true });
 
 Z(590, C, 200, CH, ["DATABASE ZONE"], 50);
-F.box(605, C + 125, 170, 70, ["Database (x2),", "clustered"]);
+F.box(605, C + 160, 170, 70, ["Database (x1),", "clustered hosts"]);
 
 Z(820, C, 540, CH, ["MACHINE CONTROL ZONE"], 30);
 F.box(960, C + 70, 260, 62, ["Printer control (x1),", "both lines"]);
@@ -100,8 +105,8 @@ F.box(60, D + 57, 190, 60, ["Backup server (x1)"]);
 F.box(270, D + 57, 190, 60, ["Backup repository,", "encrypted"], "grey", { size: 16 });
 F.box(480, D + 57, 180, 60, ["Immutable backup", "storage, 40 TB"], "grey", { size: 16 });
 Z(700, D, 660, DH, ["MANAGEMENT NETWORK"], 10);
-F.text(1030, D + 67, ["Out-of-band management interfaces of the hosts, storage array,",
-  "switches, firewalls, hardware security module and backup storage"], { size: 15 });
+F.text(1030, D + 67, ["Out-of-band management interfaces of the hosts, storage array, switches,",
+  "firewalls, load balancers, hardware security module and backup storage"], { size: 15 });
 F.text(1030, D + 111, ["Reached from the administrative access host"], { size: 14.5, italic: true });
 
 // Platform
