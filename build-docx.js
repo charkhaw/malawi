@@ -42,7 +42,7 @@ const {
   Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType,
   Table, TableRow, TableCell, WidthType, ShadingType, BorderStyle,
   ImageRun, Header, Footer, PageNumber,
-  Bookmark,
+  BookmarkStart, BookmarkEnd,
   LevelFormat, LevelSuffix, TableOfContents, SimpleField,
 } = require("docx");
 
@@ -79,6 +79,13 @@ function sectionFiles() {
 }
 
 /* -------------------------------------------------------------- bookmarks */
+
+/* Word needs every bookmark to carry its own numeric id. The library's Bookmark
+   numbers each one from a fresh counter, so every bookmark came out as id 1:
+   Word kept only one of them, and once the fields were updated every other
+   cross-reference read "Error! Reference source not found". The ids are
+   numbered here instead, once across the document, and checked after packing. */
+let bookmarkId = 0;
 
 /* "8.1 Dispatch record generation" -> "sec_8_1";  "Annex A. Abbreviations" -> "annex_a" */
 function anchorFor(text) {
@@ -468,10 +475,13 @@ function parseMarkdown(md, { isToc, isFirstFile }) {
          written about. One character of clearance puts the insertion outside
          the bookmark, and REF still resolves because the bookmark is still
          inside the heading paragraph. */
+      const bid = anchor ? ++bookmarkId : 0;
       const children = anchor
         ? [
             new TextRun({ text: title.slice(0, 1) }),
-            new Bookmark({ id: anchor, children: runs(title.slice(1)) }),
+            new BookmarkStart(anchor, bid),
+            ...runs(title.slice(1)),
+            new BookmarkEnd(bid),
           ]
         : runs(title);
 
@@ -789,6 +799,19 @@ function layoutPages(file) {
   }
 }
 
+/* Word drops a bookmark whose id repeats, and the references to it break only
+   when the fields are next updated, so a repeat stops the build here. */
+async function checkBookmarkIds(buf) {
+  const JSZip = require("jszip");
+  const xml = await (await JSZip.loadAsync(buf)).file("word/document.xml").async("string");
+  const ids = [...xml.matchAll(/<w:bookmarkStart\b[^>]*\bw:id="(\d+)"/g)].map((m) => m[1]);
+  const repeated = ids.filter((id, i) => ids.indexOf(id) !== i);
+  if (repeated.length) {
+    console.error("\nBookmark ids repeat (" + [...new Set(repeated)].join(", ") + "): Word would break the cross-references.");
+    process.exit(1);
+  }
+}
+
 function write(buf) {
   try {
     fs.writeFileSync(OUT, buf);
@@ -804,6 +827,7 @@ function write(buf) {
 
 (async () => {
   const buf = await Packer.toBuffer(makeDocument(null));
+  await checkBookmarkIds(buf);
   write(buf);
   console.log("\nWrote " + path.basename(OUT) + "  (" + (buf.length / 1024).toFixed(0) + " KB, " + files.length + " source files)");
   try {
