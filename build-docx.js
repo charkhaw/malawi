@@ -18,9 +18,9 @@
  * multilevel list, so Word owns the numbering: delete 3.1 in Word and 3.2
  * becomes 3.1 on the spot. The contents page is a real TOC field that follows
  * that renumbering on F9. Every "Section 9.2" in the body is a link to that
- * heading's bookmark showing the number as text, so it does not renumber: a
- * REF field did, but in Word updating it reported "Error! Reference source not
- * found", so the build checks the number at every build instead.
+ * heading's bookmark showing the number as text: it does not renumber as a REF
+ * field would, but it can never turn into error text either, and the build
+ * checks the number at every build instead.
  *
  * Numbers still live in the markdown headings. They are the stable identity
  * behind the bookmarks and the cross-references, and the build checks them
@@ -82,12 +82,21 @@ function sectionFiles() {
 
 /* -------------------------------------------------------------- bookmarks */
 
-/* Word needs every bookmark to carry its own numeric id. The library's Bookmark
-   numbers each one from a fresh counter, so every bookmark came out as id 1:
-   Word kept only one of them, and once the fields were updated every other
-   cross-reference read "Error! Reference source not found". The ids are
-   numbered here instead, once across the document, and checked after packing. */
+/* Every heading in the contents carries two bookmarks: a hidden "_Toc" one that
+   the contents entry links to, and the "sec_" one that cross-references link to.
+   Word owns the bookmarks its contents link to: rebuilding the contents ("Update
+   entire table", or Ctrl+A then F9) deletes them and adds fresh "_Toc" ones.
+   When the contents linked to the "sec_" bookmarks, that one update deleted the
+   target of every cross-reference, so REF fields read "Error! Reference source
+   not found" and links opened the first page. LibreOffice keeps the bookmarks,
+   which is why its checks passed; Aspose.Words, which follows Word, reproduces it.
+
+   The format also requires every bookmark to carry its own numeric id. The
+   library's Bookmark numbers each one from a fresh counter, so every bookmark
+   came out as id 1. The ids are numbered here instead, once across the
+   document, and both rules are checked after packing. */
 let bookmarkId = 0;
+const TOC_MARK_BASE = 100000000;   // "_Toc100000001": nine digits, as Word names its own
 
 /* "8.1 Dispatch record generation" -> "sec_8_1";  "Annex A. Abbreviations" -> "annex_a" */
 function anchorFor(text) {
@@ -136,12 +145,11 @@ const DANGLING = [];
 const XREF_PHRASE = /\bSections?\s+\d+(?:\.\d+)?(?:(?:,|\s+and)\s+\d+(?:\.\d+)?)*/g;
 
 /* Within a matched phrase every N.M becomes a link to the heading's bookmark,
-   showing the number as text. It was a REF field, but in Word updating the
-   fields turned those into "Error! Reference source not found", while
-   LibreOffice resolved every one of them, so the reference no longer depends
-   on a field. The number is still checked against the headings at every build,
-   so it is right when the document is produced. A bare section number is left
-   as plain text. */
+   showing the number as text. It was a REF field, which renumbers on F9 but
+   turns into "Error! Reference source not found" as soon as its bookmark is
+   lost (see "bookmarks"); a link cannot. The number is checked against the
+   headings at every build, so it is right when the document is produced. A
+   bare section number is left as plain text. */
 function phraseRuns(phrase, style) {
   const out = [];
   const re = /\d+\.\d+/g;
@@ -306,7 +314,7 @@ function runs(text, { italics = false, bold = false, xref = false } = {}) {
    because a field Word has not refreshed shows nothing at all: in Protected
    View, in a previewer, or when Word is told not to update. Page numbers are
    written when known, and Word recalculates every entry on its next update. */
-const CONTENTS = [];        // { level, label, anchor } for every Heading 1 and 2
+const CONTENTS = [];        // { level, label, anchor, toc } for every Heading 1 and 2
 const CONTENTS_SLOT = {};   // where the contents go; filled when the document is assembled
 
 function contentsField(pages) {
@@ -314,7 +322,7 @@ function contentsField(pages) {
     hyperlink: true,
     headingStyleRange: "1-2",
     cachedEntries: CONTENTS.map((e) => ({
-      title: e.label, level: e.level, href: e.anchor,
+      title: e.label, level: e.level, href: e.toc,
       page: (pages && pages[e.anchor]) || undefined,
     })),
   });
@@ -469,8 +477,10 @@ function parseMarkdown(md, { isToc, isFirstFile }) {
                        HeadingLevel.HEADING_3, HeadingLevel.HEADING_4][depth - 1];
       const anchor = isToc ? null : anchorFor(text);
       const { number, title } = isToc ? { number: null, title: text } : splitHeading(text);
+      let toc = null;
       if (depth <= 2 && anchor) {
-        CONTENTS.push({ level: depth, anchor, label: number ? number + (depth === 1 ? ". " : " ") + title : title });
+        toc = "_Toc" + (TOC_MARK_BASE + CONTENTS.length + 1);
+        CONTENTS.push({ level: depth, anchor, toc, label: number ? number + (depth === 1 ? ". " : " ") + title : title });
       }
       /* The bookmark starts one character into the title, not at the start of
          the paragraph. Inserting a new heading by clicking at the start of an
@@ -479,14 +489,19 @@ function parseMarkdown(md, { isToc, isFirstFile }) {
          would then silently point at the new section instead of the one it was
          written about. One character of clearance puts the insertion outside
          the bookmark, and links still land on the heading because the bookmark
-         is still inside its paragraph. */
+         is still inside its paragraph. The contents' own "_Toc" bookmark spans
+         the whole title, as Word's do; Word replaces it whenever it rebuilds the
+         contents. */
       const bid = anchor ? ++bookmarkId : 0;
+      const tid = toc ? ++bookmarkId : 0;
       const children = anchor
         ? [
+            ...(toc ? [new BookmarkStart(toc, tid)] : []),
             new TextRun({ text: title.slice(0, 1) }),
             new BookmarkStart(anchor, bid),
             ...runs(title.slice(1)),
             new BookmarkEnd(bid),
+            ...(toc ? [new BookmarkEnd(tid)] : []),
           ]
         : runs(title);
 
@@ -804,17 +819,27 @@ function layoutPages(file) {
   }
 }
 
-/* Word drops a bookmark whose id repeats, and the references to it break only
-   when the fields are next updated, so a repeat stops the build here. */
-async function checkBookmarkIds(buf) {
+/* The two bookmark rules (see "bookmarks" above) break nothing until Word next
+   rebuilds the contents, long after the build, so they are checked here: every
+   id is unique, every link has its bookmark, and no bookmark is the target both
+   of the contents and of a cross-reference. */
+async function checkBookmarks(buf) {
   const JSZip = require("jszip");
   const xml = await (await JSZip.loadAsync(buf)).file("word/document.xml").async("string");
+  const fail = (msg) => { console.error("\n" + msg); process.exit(1); };
   const ids = [...xml.matchAll(/<w:bookmarkStart\b[^>]*\bw:id="(\d+)"/g)].map((m) => m[1]);
   const repeated = ids.filter((id, i) => ids.indexOf(id) !== i);
-  if (repeated.length) {
-    console.error("\nBookmark ids repeat (" + [...new Set(repeated)].join(", ") + "): Word would break the cross-references.");
-    process.exit(1);
-  }
+  if (repeated.length) fail("Bookmark ids repeat (" + [...new Set(repeated)].join(", ") + "): Word may pair the wrong start and end.");
+  const names = new Set([...xml.matchAll(/<w:bookmarkStart\b[^>]*\bw:name="([^"]+)"/g)].map((m) => m[1]));
+  const from = xml.indexOf('<w:alias w:val="Contents"/>');
+  const to = from < 0 ? -1 : xml.indexOf("</w:sdt>", from);
+  const anchors = (s) => [...s.matchAll(/<w:hyperlink\b[^>]*\bw:anchor="([^"]+)"/g)].map((m) => m[1]);
+  const inContents = new Set(from < 0 ? [] : anchors(xml.slice(from, to)));
+  const elsewhere = new Set(from < 0 ? anchors(xml) : [...anchors(xml.slice(0, from)), ...anchors(xml.slice(to))]);
+  const missing = [...inContents, ...elsewhere].filter((a) => !names.has(a));
+  if (missing.length) fail("Links to missing bookmarks: " + [...new Set(missing)].join(", "));
+  const shared = [...inContents].filter((a) => elsewhere.has(a));
+  if (shared.length) fail("The contents link to cross-reference bookmarks (" + shared.join(", ") + "): rebuilding the contents in Word would delete them.");
 }
 
 function write(buf) {
@@ -832,7 +857,7 @@ function write(buf) {
 
 (async () => {
   const buf = await Packer.toBuffer(makeDocument(null));
-  await checkBookmarkIds(buf);
+  await checkBookmarks(buf);
   write(buf);
   console.log("\nWrote " + path.basename(OUT) + "  (" + (buf.length / 1024).toFixed(0) + " KB, " + files.length + " source files)");
   try {
