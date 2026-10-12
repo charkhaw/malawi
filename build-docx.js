@@ -16,9 +16,11 @@
  *
  * Section numbers are not written into the document as text. Headings carry a
  * multilevel list, so Word owns the numbering: delete 3.1 in Word and 3.2
- * becomes 3.1 on the spot. The contents page is a real TOC field and every
- * "Section 9.2" in the body is a REF field pointing at that heading's
- * bookmark, so both follow the same renumbering on F9.
+ * becomes 3.1 on the spot. The contents page is a real TOC field that follows
+ * that renumbering on F9. Every "Section 9.2" in the body is a link to that
+ * heading's bookmark showing the number as text, so it does not renumber: a
+ * REF field did, but in Word updating it reported "Error! Reference source not
+ * found", so the build checks the number at every build instead.
  *
  * Numbers still live in the markdown headings. They are the stable identity
  * behind the bookmarks and the cross-references, and the build checks them
@@ -43,7 +45,7 @@ const {
   Table, TableRow, TableCell, WidthType, ShadingType, BorderStyle,
   ImageRun, Header, Footer, PageNumber,
   BookmarkStart, BookmarkEnd,
-  LevelFormat, LevelSuffix, TableOfContents, SimpleField,
+  LevelFormat, LevelSuffix, TableOfContents, SimpleField, InternalHyperlink,
 } = require("docx");
 
 const DOCS = require("./docs.config");
@@ -133,10 +135,13 @@ const DANGLING = [];
 /* "Section 9.2", "Sections 9.1 and 9.4", "Sections 6.2, 6.3 and 6.4" */
 const XREF_PHRASE = /\bSections?\s+\d+(?:\.\d+)?(?:(?:,|\s+and)\s+\d+(?:\.\d+)?)*/g;
 
-/* Within a matched phrase every N.M becomes a REF field carrying the current
-   number as its cached value, so the text reads correctly before Word updates
-   it. A bare section number is left as text: REF would return "9." including
-   the separator the list format puts after a top-level number. */
+/* Within a matched phrase every N.M becomes a link to the heading's bookmark,
+   showing the number as text. It was a REF field, but in Word updating the
+   fields turned those into "Error! Reference source not found", while
+   LibreOffice resolved every one of them, so the reference no longer depends
+   on a field. The number is still checked against the headings at every build,
+   so it is right when the document is produced. A bare section number is left
+   as plain text. */
 function phraseRuns(phrase, style) {
   const out = [];
   const re = /\d+\.\d+/g;
@@ -145,7 +150,7 @@ function phraseRuns(phrase, style) {
     if (m.index > last) out.push(new TextRun({ text: phrase.slice(last, m.index), ...style }));
     const anchor = "sec_" + m[0].replace(/\./g, "_");
     if (ANCHORS.has(anchor)) {
-      out.push(new SimpleField("REF " + anchor + " \\w \\h", m[0]));
+      out.push(new InternalHyperlink({ anchor, children: [new TextRun({ text: m[0], ...style })] }));
     } else {
       DANGLING.push(m[0]);
       out.push(new TextRun({ text: m[0], ...style }));
@@ -473,8 +478,8 @@ function parseMarkdown(md, { isToc, isFirstFile }) {
          that began at position zero would swallow the new text: the reference
          would then silently point at the new section instead of the one it was
          written about. One character of clearance puts the insertion outside
-         the bookmark, and REF still resolves because the bookmark is still
-         inside the heading paragraph. */
+         the bookmark, and links still land on the heading because the bookmark
+         is still inside its paragraph. */
       const bid = anchor ? ++bookmarkId : 0;
       const children = anchor
         ? [
