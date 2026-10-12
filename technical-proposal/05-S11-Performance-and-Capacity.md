@@ -132,7 +132,7 @@ Performance is guaranteed under the following conditions rather than only under 
 | Mixed workload | Concurrent production, reporting and administrative activity |
 | Concurrent batch and real-time processing | Batch preparation runs alongside real-time status exchange without either being starved |
 | Failover and disaster recovery mode | On the loss of a host, the other host of its cluster carries that cluster's production workload at full performance, as described in Section 9.1. On failover to the secondary environment, the data and application services continue within the recovery targets in Section 9.3, and card production resumes when the production platform at the Card Production Facility is restored |
-| Maintenance windows | Minimal downtime: the paired hosts, application servers, database nodes, storage controllers, firewalls and core switches are maintained one at a time while the other of each pair carries the load, and maintenance is scheduled outside the production window where possible |
+| Maintenance windows | Minimal downtime: the paired hosts, application servers, load balancers, storage controllers, firewalls and core switches are maintained one at a time while the other of each pair carries the load, and maintenance is scheduled outside the production window where possible |
 
 **Availability.** Not less than 99 percent, measured as described in Section 9.3.
 

@@ -10,28 +10,28 @@ to remain licensed and supported.
 | Title | License metric | Quantity | Serves |
 |---|---|---|---|
 | Windows Server Datacenter | Per physical core, with every core licensed and not fewer than 16 core licenses per host | 144 core licenses: the 2 application hosts at the primary site and the host at the secondary site, each of two 24-core processors | The server operating system and Hyper-V on those hosts, failover clustering of the application hosts, and every Windows Server virtual machine they run, including the domain controllers |
-| Windows Server Standard | Per physical core, with every core licensed and not fewer than 16 core licenses per host | 96 core licenses: the 2 database hosts at the primary site, each of two 24-core processors | The server operating system and Hyper-V on the database hosts, failover clustering of the database hosts, and the two database node virtual machines |
-| SQL Server Standard | Per virtual core, not fewer than four per virtual machine, with Software Assurance | The virtual cores allocated to the active database node | The production database. The passive node at the primary site and the secondary copy at the secondary site are covered by the failover rights of Software Assurance |
+| Windows Server Standard | Per physical core, with every core licensed and not fewer than 16 core licenses per host | 96 core licenses: the 2 database hosts at the primary site, each of two 24-core processors | The server operating system and Hyper-V on the database hosts, failover clustering of the database hosts, and the database virtual machine |
+| SQL Server Standard | Per virtual core, not fewer than four per virtual machine, with Software Assurance | The virtual cores allocated to the database virtual machine | The production database. The secondary copy at the secondary site is covered by the failover rights of Software Assurance |
 | SQL Server Developer | No license fee, for development and testing | The development, user acceptance testing and training environments | Non-production databases |
 | Windows desktop operating system | Per device, supplied with the workstation | 10 | The operator and administrative workstations |
-| Endpoint detection and response | Per endpoint | 35: the 5 hosts; 20 virtual machines, being the 16 production and 2 non-production virtual machines at the primary site, and the domain controller and the database copy at the secondary site; and the 10 workstations. The standby copies at the secondary site run only in place of the virtual machines they copy | Endpoint protection and anti-malware |
+| Endpoint detection and response | Per endpoint | 34: the 5 hosts; 19 virtual machines, being the 14 production and 2 non-production virtual machines at the primary site, and the domain controller, the database copy and the Veeam server at the secondary site; and the 10 workstations. The standby copies at the secondary site run only in place of the virtual machines they copy | Endpoint protection and anti-malware |
 | Privileged access management | Per privileged user | Every administrator and privileged account | Privileged access issued for a session and a purpose |
 | Multi-factor authentication | Per user | Every administrator and operator | Authentication of administrators and operators |
 | Vulnerability scanning | Per scanned asset | All hosts, virtual machines, network devices and workstations | Scheduled vulnerability scanning and compliance reporting |
 | Monitoring, log aggregation and security information and event management: MDR / MSOC | Subscription, by monitored node and event volume | All infrastructure and application sources, and the full event volume of the estate | Monitoring, alerting, ticket generation and log aggregation, and the collection and correlation of security events across all sources for the Security Operations Center |
 | Bulk SMS service | Per message, in a three-year bundle | The alert volume of the estate over three years | Delivery of alerts by SMS to the NRB staff designated for each type of alert |
-| Backup and recovery, Veeam Backup & Replication | Per protected workload | 16, the production virtual machines at the primary site, with configuration and audit logs, replicated to the secondary site | Scheduled backup, immutable retention and restoration |
+| Backup and recovery, Veeam Backup & Replication | Per instance | 30 instances, covering the protected virtual machines at both sites, with configuration and audit logs, replicated to the secondary site | Scheduled backup, immutable retention and restoration |
 | Next generation firewall security subscriptions | Per appliance | 3: the high availability pair at the primary site and the firewall at the secondary site | Intrusion prevention signatures and threat updates |
-| Storage array and network device support and firmware | Per device | The storage array, 5 switches and 2 firewalls at the primary site, and 1 switch and 1 firewall at the secondary site | Manufacturer support, replacement and firmware updates |
+| Storage array and network device support and firmware | Per device | The storage array, 5 switches, 2 firewalls and 2 load balancers at the primary site, and 1 switch, 1 firewall and 1 load balancer at the secondary site | Manufacturer support, replacement and firmware updates |
 | Hardware security module support and client software | Per module | 2, one at each site | Firmware updates, and the client software through which the Signing Service reaches the modules |
 
 The application hosts and the secondary host carry Windows Server Datacenter, because the edition
 licenses an unlimited number of Windows Server virtual machines on the host it covers: either
 application host runs every production virtual machine of the application cluster when the other is
-lost, together with the non-production environments, and the secondary host runs the ten virtual
+lost, together with the non-production environments, and the secondary host runs the eleven virtual
 machines of the secondary environment. The database hosts carry Windows Server Standard, which
-licenses two Windows Server virtual machines on each fully licensed host: each database host runs one
-database node, and either can run both when the other is lost.
+licenses two Windows Server virtual machines on each fully licensed host, more than the one database
+virtual machine either host runs.
 
 **Equipment software**, supplied by the equipment manufacturer:
 
@@ -78,7 +78,7 @@ together with their license terms, as described in System Architecture Section 6
 | License type | Coverage for three years from Operational Acceptance |
 |---|---|
 | Windows Server Datacenter and Standard | Perpetual licenses, with security and quality updates and support by the Supplier under Section 5 |
-| SQL Server Standard | Perpetual licenses with Software Assurance for three years, providing updates, license mobility between the clustered hosts, and failover rights for the passive node and the secondary copy |
+| SQL Server Standard | Perpetual licenses with Software Assurance for three years, providing updates, license mobility between the database hosts, and failover rights for the secondary copy |
 | Subscriptions: MDR / MSOC, security, operations, firewall, storage array and network device support, and the bulk SMS service | A subscription term of three years |
 | Equipment software | Support and updates from the equipment manufacturer for the warranty period |
 | Hardware security modules | Support and firmware updates for three years |

@@ -39,9 +39,8 @@ is how the 15 percent annual growth is absorbed across a ten to fifteen year ret
 storage array shared by the four virtualization hosts of the primary site. The platform is Windows
 Server with Hyper-V, and the hosts form two failover clusters over the shared storage, an application
 cluster and a database cluster of two hosts each. The array has two controllers
-with non-disruptive failover between them, redundant power, and a protected drive
-pool, RAID 6 or the manufacturer's equivalent, which keeps the data available through the failure of
-any two drives. Data on the array is encrypted at rest. Snapshots on the array are operational aids,
+with non-disruptive failover between them, redundant power, and a drive pool protected by RAID,
+which keeps the data available through the failure of a drive. Data on the array is encrypted at rest. Snapshots on the array are operational aids,
 such as a rollback point before a change, and are not backups. Backups are written to the separate
 immutable backup storage, under the regime described in Section 12.3.
 
@@ -53,12 +52,13 @@ the secondary environment described in Section 9.3, which carries the data and t
 services until the array is restored.
 
 **Host derivation.** The primary site runs **four virtualization hosts** in two clusters, each host
-with two processors of 24 cores and 256 GB of memory. The application cluster of two hosts carries
+with two processors of 24 cores and 384 GB of memory. The application cluster of two hosts carries
 the integration, application, machine control, management, directory, security and backup virtual
 machines and the non-production environments, and each of its hosts is sized to run every
 production virtual machine of the cluster on its own. The database cluster of two hosts carries the
-two database nodes, one on each host, so that the database has processor, memory and storage paths of
-its own and never contends with the application workload. When a host in either cluster is lost, or
+database virtual machine, which runs on one host and is restarted on the other if that host is lost,
+so that the database has processor, memory and storage paths of its own and never contends with the
+application workload. When a host in either cluster is lost, or
 taken out for patching, the other host of that cluster carries its workload at full performance, and
 the non-production environments are the first workloads stopped to make room for it.
 
@@ -66,14 +66,15 @@ the non-production environments are the first workloads stopped to make room for
 
 | Element | Quantity | Role |
 |---|---|---|
-| Application hosts | 2 | Two processors of 24 cores and 256 GB of memory each. Application cluster with automated failover over the storage array, carrying the integration, application, load balancer, machine control, management, directory, security and backup virtual machines and the non-production environments, each sized to run every production virtual machine of the cluster alone |
-| Database hosts | 2 | Two processors of 24 cores and 256 GB of memory each. Database cluster over the storage array, one database node on each host |
+| Application hosts | 2 | Two processors of 24 cores and 384 GB of memory each. Application cluster with automated failover over the storage array, carrying the integration, application, machine control, management, directory, security and backup virtual machines and the non-production environments, each sized to run every production virtual machine of the cluster alone |
+| Database hosts | 2 | Two processors of 24 cores and 384 GB of memory each. Database cluster over the storage array, carrying the database virtual machine, which runs on one host and fails over to the other |
 | Storage array | 1 | Holds the virtual machines and their data, not less than 20 TB usable after RAID, with dual controllers, redundant power and a protected drive pool |
 | Backup repository | 1 | Encrypted, managed by Veeam Backup & Replication, holding the restore points used for routine restoration |
 | Immutable backup storage | 1 | Not less than 40 TB usable, encrypted, covering retention cycles, with copies that no administrator can alter or delete before their retention ends |
 | Core switches | 2 | Layer 3, redundant pair carrying the zone VLANs, including the Storage Zone |
 | Edge switches | 3 | Managed and non-PoE, in one stack, connecting the operator and administrative workstations in the User Network, the personalization and mailing lines in the Machine Control Zone, and the management interfaces in the Management Network, to the core pair |
 | Next generation firewalls | 2 | High availability pair, providing zone policy and intrusion detection and prevention |
+| Load balancers | 2 | High availability pair of appliances, 10 Gbps, distributing application and administrative traffic across the two application servers, with health checks, behind one virtual address |
 | Hardware security module | 1 | Holds the Document Signer key, replicated to a second module at the secondary site, as described in Section 10.4 |
 | Operator and administrative workstations | 10 | Client devices for the consoles described below |
 
@@ -115,25 +116,24 @@ within the network zone appropriate to its function:
 |---|---|---|---|
 | Integration gateway | The NRIS interface of the Data Preparation Service, described in Section 7.1 | External Integration Zone | 1 |
 | Application server | Card Personalization Management, Data Preparation, Quality Control Management, Stock Control and Card Accountability, Mailing and Dispatch Management System, and Monitoring, Reporting and Analytics | Application Zone | 2 |
-| Load balancer | Distributes application and administrative traffic across the two application servers, with health checks, as an active-passive pair sharing one virtual address | Application Zone | 2 |
 | Signing Service | Signing Service, the sole client of the hardware security modules | Application Zone | 1 |
-| Database | Clustered database, two nodes, one on each database host | Database Zone | 2 |
+| Database | The production database, on one virtual machine of the database cluster, restarted on the other database host if its host is lost | Database Zone | 1 |
 | Printer control | Printer Control Service and the interface to the manufacturer's personalization control software, for both personalization lines | Machine Control Zone | 1 |
 | Management | Administration and Access Control, administrative access host, and the mail relay that sends alert emails | Management and Monitoring Zone | 1 |
 | Directory | Domain controllers: the directory, authentication and name resolution for the estate, and its common time source. The two run on different application hosts and replicate to each other, and a third runs at the secondary site | Management and Monitoring Zone | 2 |
-| Security monitoring | Security information and event management on three virtual machines, for indexing, management and the dashboard, with log aggregation and endpoint management | Management and Monitoring Zone | 3 |
+| Security monitoring | The MDR / MSOC service: security information and event management, log aggregation and endpoint management, on four virtual machines | Management and Monitoring Zone | 4 |
 | Backup server | Veeam Backup & Replication: backup scheduling, cataloging, replication to the secondary site and restoration | Backup Zone | 1 |
 
 **Both application servers are active.** Application and administrative traffic is load balanced
-across the two application server instances by two load balancer virtual machines, an active-passive
-pair on different application hosts, and the cluster also keeps the two instances on different
-application hosts.
+across the two application server instances by a high availability pair of load balancer
+appliances, and the cluster keeps the two instances on different application hosts.
 Each instance is sized to carry the whole load, so that when one is lost the other takes its traffic
 at once, while the cluster restarts the lost instance on the surviving host.
 
-**The database runs on hosts of its own.** The two database nodes run on the two hosts of the
-database cluster, one on each, so that the database never contends with the application workload for
-processor, memory or storage paths, and no single host failure affects both nodes.
+**The database runs on hosts of its own.** The database virtual machine runs on the database
+cluster, so that it never contends with the application workload for processor, memory or storage
+paths. If its host is lost, the cluster restarts it on the other database host from the same disk
+image on the storage array.
 
 **The DMZ is provisioned and carries no service at go-live.** The zone is configured with its policy
 and addressing in place, so that any externally exposed service the Purchaser later introduces has a
@@ -161,10 +161,11 @@ Network connection.
 
 | Element | Quantity | Role |
 |---|---|---|
-| Virtualization host | 1 | Standalone, with the same processors and memory as the primary hosts, and internal storage of not less than 20 TB usable after RAID. It runs 10 virtual machines: the secondary copy of the database, kept current by database replication; a domain controller, kept current by directory replication; and standby copies of the integration gateway, application server, load balancer, management and backup server virtual machines, one of each, and of the three security monitoring virtual machines, kept current by virtual machine replication |
+| Virtualization host | 1 | Standalone, with the same processors and memory as the primary hosts, and internal storage of not less than 20 TB usable after RAID. It runs 11 virtual machines: the secondary copy of the database, kept current by database replication; a domain controller, kept current by directory replication; a Veeam Backup & Replication server, which manages the backup copies held at this site; and standby copies of the integration gateway, application server, management and backup server virtual machines, one of each, and of the four security monitoring virtual machines, kept current by virtual machine replication |
 | Backup repository | 1 | Encrypted, receiving the backup copies replicated from the primary site |
 | Immutable backup storage | 1 | The offsite copy of the backups, not less than 40 TB usable, encrypted |
 | Next generation firewall | 1 | Standalone, providing zone policy and intrusion prevention for the secondary environment |
+| Load balancer | 1 | Appliance, 10 Gbps, with the same virtual address as the primary pair, so that clients reach the application at this site without being reconfigured |
 | Core switch | 1 | Layer 3, standalone, carrying the secondary environment's network. No separate edge switches are needed at this site |
 | Hardware security module | 1 | Replicated from the module at the primary site, as described in Section 10.4 |
 
@@ -186,7 +187,7 @@ standby host has no other host to share them with.
 
 These run on two virtual machines on the hosts of the application cluster: one for development, and
 one shared by training and user acceptance testing, which run the same released version. With them,
-the primary site runs 18 virtual machines: the 16 production virtual machines in the inventory above
+the primary site runs 16 virtual machines: the 14 production virtual machines in the inventory above
 and these 2. They sit on a segment of their own within the Application Zone, which the firewall pair
 separates from every production service, as described in Section 9.2. Running them on the
 production platform keeps them on the same software and versions as production and under the same
@@ -202,7 +203,7 @@ create further copies of citizen records.
 |---|---|
 | High-volume transactional processing | Sustains the transaction rates described in Section 11.4 under production load |
 | ACID compliance | A production transaction either completes or does not, so a card cannot be half recorded |
-| Clustering and high availability | The database survives the loss of a node without losing committed work |
+| Clustering and high availability | The database survives the loss of a host without losing committed work |
 | Replication | Maintains the secondary copy described in Section 9.3 |
 | Encryption at rest | Protects identity and personalization data on disk, under Section 10.2 |
 | Backup and recovery | Supports the backup and restoration regime in Section 12.3 |
@@ -225,11 +226,11 @@ through firewall policy, and no zone is reachable from another by default.
 
 | VLAN | Zone | Contents |
 |---|---|---|
-| 10 | Management Network | The management interfaces of the hosts, the storage array, the switches, the firewalls, the hardware security module and the backup storage, reached from the administrative access host |
+| 10 | Management Network | The management interfaces of the hosts, the storage array, the switches, the firewalls, the load balancers, the hardware security module and the backup storage, reached from the administrative access host |
 | 20 | User Network | The operator and administrative workstations, connected through the edge switch stack |
 | 30 | Machine Control Zone | The personalization and mailing lines and their control systems, connected through the edge switch stack |
-| 40 | Application Zone | The application services described in Section 6, including the Signing Service, and, on segments of their own, the hardware security module and the non-production environments |
-| 50 | Database Zone | The database nodes |
+| 40 | Application Zone | The load balancer pair and the application services described in Section 6, including the Signing Service, and, on segments of their own, the hardware security module and the non-production environments |
+| 50 | Database Zone | The database virtual machine |
 | 60 | External Integration Zone | The interface to NRIS and to external services |
 | 70 | Storage Zone | The traffic between the virtualization hosts and the storage array, and nothing else |
 | 80 | Backup Zone | The backup server, the backup repository, the immutable backup storage and the backup traffic |
@@ -318,11 +319,11 @@ available.
 ## 9.3 High availability, failover and disaster recovery
 
 **High availability within the facility.** Application services are clustered across the two hosts
-of the application cluster, the two database nodes run on the two hosts of the database cluster,
-every host reaches the storage array through both of its controllers, and printing jobs are
+of the application cluster, the database virtual machine fails over between the two hosts of the
+database cluster, every host reaches the storage array through both of its controllers, and printing jobs are
 distributed across available
 lines by the Card Personalization Management System described in Section 6.2. The failure of a
-line, an edge switch, a host, a database node, a storage controller, a core switch or a firewall
+line, an edge switch, a host, a load balancer, a storage controller, a core switch or a firewall
 reduces throughput, or pauses it for the failover window, rather than stopping production. Nor does
 the failure of the hardware security module at the primary site: the Signing Service then signs
 through the replicated module at the secondary site, over the encrypted connection between the
@@ -347,8 +348,9 @@ on it are restarted on the other application host, from the same disk images, wh
 because they are held on the storage array rather than on the failed host. Application traffic is
 carried throughout by the application server instance on the other host. That host is sized to run
 every production virtual machine of the cluster on its own, so production continues at full capacity
-while the non-production environments are stopped. When a database host is lost, the database node
-on the other database host takes over without losing committed work. Nothing is restored and nothing
+while the non-production environments are stopped. When a database host is lost, the cluster
+restarts the database virtual machine on the other database host, from its disk image on the storage
+array, without losing committed work. Nothing is restored and nothing
 is copied at the time of failure, which is what allows
 recovery to complete within the stated window rather than within the time a restoration would take.
 
@@ -360,10 +362,11 @@ to the primary site.
 The secondary environment is functional and operational at Operational Acceptance, as a warm
 standby. On the internal storage of its single host it holds a running replicated copy of the
 production database, a running domain controller, and standby copies of the service virtual
-machines kept current by replication and started on failover. Among them is a standby copy of the load
-balancer, started with the same configuration and virtual address, so clients reach the application at
-the secondary site without being reconfigured. Beside the host are the offsite
-backup copies and the replicated hardware security module. Recovery therefore does not depend on
+machines kept current by replication and started on failover, together with a running Veeam Backup &
+Replication server for the backup copies held there. The load balancer appliance at the secondary site
+carries the same virtual address as the primary pair, so clients reach the application there without
+being reconfigured. Beside the host are the offsite backup copies and the replicated hardware security
+module. Recovery therefore does not depend on
 rebuilding from installation media.
 
 | Element | Provision |
@@ -408,18 +411,20 @@ delivered under the facility works.
 
 | Item | Quantity | Specification |
 |---|---|---|
-| Application hosts, primary site | 2 | Enterprise rack servers, two processors of 24 cores and 256 GB of memory each, redundant power, redundant paths to both controllers of the storage array with multipath, clustered with automated failover, each sized to run every production virtual machine of the application cluster alone, and carrying the non-production environments |
-| Database hosts, primary site | 2 | Enterprise rack servers, two processors of 24 cores and 256 GB of memory each, redundant power, redundant paths to both controllers of the storage array with multipath, clustered, one database node on each |
-| Storage array, primary site | 1 | Enterprise storage array, dual controllers with non-disruptive failover, redundant power, a protected drive pool, RAID 6 or the manufacturer's equivalent, encryption at rest, not less than 20 TB usable after RAID |
+| Application hosts, primary site | 2 | Enterprise rack servers, two processors of 24 cores and 384 GB of memory each, redundant power, redundant paths to both controllers of the storage array with multipath, clustered with automated failover, each sized to run every production virtual machine of the application cluster alone, and carrying the non-production environments |
+| Database hosts, primary site | 2 | Enterprise rack servers, two processors of 24 cores and 384 GB of memory each, redundant power, redundant paths to both controllers of the storage array with multipath, clustered, carrying the database virtual machine |
+| Storage array, primary site | 1 | Enterprise storage array, dual controllers with non-disruptive failover, redundant power, a drive pool protected by RAID, encryption at rest, not less than 20 TB usable after RAID |
 | Backup repository, primary site | 1 | Encrypted, managed by Veeam Backup & Replication |
 | Immutable backup storage, primary site | 1 | Not less than 40 TB usable, encrypted, with retention that no administrator can override |
-| Virtualization host, secondary site | 1 | Standalone enterprise rack server, two processors of 24 cores and 256 GB of memory, redundant power, internal storage of not less than 20 TB usable after RAID, running the 10 virtual machines of the secondary environment at the Purchaser's disaster recovery data center |
+| Virtualization host, secondary site | 1 | Standalone enterprise rack server, two processors of 24 cores and 384 GB of memory, redundant power, internal storage of not less than 20 TB usable after RAID, running the 11 virtual machines of the secondary environment at the Purchaser's disaster recovery data center |
 | Backup repository, secondary site | 1 | Encrypted, receiving the backup copies replicated from the primary site |
 | Immutable backup storage, secondary site | 1 | The offsite copy of the backups, not less than 40 TB usable, encrypted |
 | Core switches, primary site | 2 | Layer 3, redundant pair, carrying the zone VLANs, including the Storage Zone |
 | Edge switches, primary site | 3 | Managed, non-PoE, stacked, for the User Network, the Machine Control Zone and the Management Network |
 | Next generation firewalls, primary site | 2 | High availability pair, with intrusion detection and prevention |
 | Next generation firewall, secondary site | 1 | Standalone, with zone policy and intrusion prevention for the secondary environment |
+| Load balancers, primary site | 2 | High availability pair of appliances, 10 Gbps |
+| Load balancer, secondary site | 1 | Appliance, 10 Gbps |
 | Core switch, secondary site | 1 | Layer 3, standalone, carrying the secondary environment's network |
 | Hardware security modules | 2 | One at each site, the module at the secondary site replicated from the module at the primary site, FIPS 140-2 or FIPS 140-3 validated |
 | Operator and administrative workstations | 10 | Client devices for the consoles listed in Section 9.1 |
@@ -439,7 +444,7 @@ delivered under the facility works.
 | Multi-factor authentication | All administrators and operators |
 | Vulnerability scanning | All hosts, virtual machines, network devices and workstations |
 | Next generation firewall security subscriptions | All three firewalls |
-| Storage array and network device support and firmware | The storage array, all switches and all firewalls |
+| Storage array and network device support and firmware | The storage array, all switches, all firewalls and all load balancers |
 | Hardware security module client software and support | Both modules, and the Signing Service that reaches them |
 | Monitoring, log aggregation and security information and event management: MDR / MSOC | All infrastructure, application and security sources across the estate |
 | SMS alert service | Subscription to a bulk SMS provider in Malawi for the delivery of alerts, for three years |
