@@ -67,9 +67,9 @@ drives progression through the production sequence:
 
 **Operator-directed assignment with automated balancing.** An operator selects work and nominates the
 production line through the Printer Controller Admin console. Within a line, the machine's own control
-software routes cards to the available laser stations, as described in Section 3.4, so a station taken
-out of service mid-batch does not stop production. Where an operator does
-not nominate a line, work is allocated on available capacity.
+software drives the laser stations, as described in Section 3.4, and while a machine is being
+serviced, queued batches are directed to the other line. Where an operator does not nominate a line,
+work is allocated on available capacity.
 
 Production status written by the Printer Control Service surfaces in this system's interface, so a
 supervisor sees the live state of every batch and every card within it from one place.

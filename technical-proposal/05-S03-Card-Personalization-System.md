@@ -16,7 +16,7 @@ Each line comprises:
 | Laser engraving units | Perform all marking on both faces of the card |
 | Verification cameras and scanners | Read and check the personalized card in line |
 | Card reject module | Diverts cards failing verification out of the production path |
-| Cooling system | Maintains laser operating temperature under continuous industrial duty |
+| Filtering system | Filters the air extracted from the laser marking area. The laser units need no cooling system |
 | Card stacker | Receives verified cards on completion, with a 600 card capacity |
 | Industrial control PC | Runs the machine software and drives the laser stations |
 | Emergency stop buttons | Positioned around the machine, so that the operator can reach one from every point at the line |
@@ -26,8 +26,8 @@ air supply.
 
 The marking subsystem is fully integrated into the machine rather than assembled from separate
 units. It comprises the dedicated laser marking unit, the power supply and control PC for laser and
-greyscale personalization, and the integrated cooling system, all operating under synchronized
-workflow control as a single system.
+greyscale personalization, and the filtering system, all operating under synchronized workflow
+control as a single system. The laser units need no cooling system, as the manufacturer confirms.
 
 Marking uses fiber laser technology with greyscale printing, applied to 100% polycarbonate cards.
 Laser engraving carbonizes material within the card body itself rather than depositing anything on
@@ -82,33 +82,28 @@ successive characters without drift across the marking field.
 Both resolutions are measured on produced cards at factory acceptance testing, as set out in the
 Testing and Quality Assurance Sub-Plan of the Preliminary Project Plan.
 
-## 3.4 Independent laser station operation
+## 3.4 Laser station configuration
 
-Each integrated laser station personalizes a complete card on its own. A station receives the full
-card layout and the full data record for the card it is processing, and completes all marking for
-that card without depending on any other station.
+Each machine carries five laser stations, in the configuration the manufacturer recommends for
+performance: two for each face of the card and one for the CLI. Each card is personalized on both
+faces, including its CLI, within one machine and in a single pass of the transport path.
 
-This has three consequences for production:
+**A station can be taken out of service.** Any laser station can be switched off or removed for
+maintenance. The machine is then set up for the stations that remain, which takes a change to the
+job and machine settings, so a station is taken out at the end of a production run rather than
+during it. With a station for one face out of service, the machine continues on the other station
+for that face.
 
-**Any station can be taken out of service without stopping the line.** A station may be switched on,
-switched off, or removed for maintenance while the line continues to run. The production workflow
-routes cards only to stations that are available.
-
-**Production continues without interruption or loss of quality.** While a station is out of service,
-cards continue to be fed, marked, verified and stacked, and no job is stopped or rerun. All stations
-are calibrated to identical marking quality, as described in Section 3.8, so a card is the same
-whichever station marked it. There is no single station whose loss halts the line.
-
-**Maintenance can be scheduled without a production window.** Because stations are independent,
-routine maintenance on one station proceeds while the remainder of the line is producing cards.
-
-The same principle applies at the level of the two machines. Each line operates independently of the
-other, so the loss of a complete line does not stop production, which continues on the other line.
+**Production continues on the other machine.** The two machines are complete and independent
+production lines, as described in Section 3.1. While one is being serviced, including its CLI
+station, production continues on the other, so the servicing of a station does not stop card
+production. All stations are calibrated to identical marking quality, as described in Section 3.8,
+so a card is the same whichever station marked it.
 
 ![Personalization line](../images/Figure-3-1-Personalization-Line.png)
 
-*Figure 3.1: Personalization line. Each laser station marks a complete card on both faces; a station
-out of service is bypassed and production continues without interruption.*
+*Figure 3.1: Personalization line. Five laser stations, two for each face and one for the CLI,
+personalize each card in a single pass. Line 2 is identical and independent of line 1.*
 
 ## 3.5 Throughput and duplex performance
 

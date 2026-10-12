@@ -17,7 +17,7 @@
 - 3.1 Configuration and modular design
 - 3.2 Laser marking capability
 - 3.3 Marking resolution
-- 3.4 Independent laser station operation
+- 3.4 Laser station configuration
 - 3.5 Throughput and duplex performance
 - 3.6 Card recognition, alignment and in-line verification
 - 3.7 Reject detection and in-job reproduction

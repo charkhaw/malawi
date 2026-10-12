@@ -9,15 +9,15 @@ record is the unit of accountability from that point onward, and every later sta
 |---|---|
 | Card serial number | Identifies the physical card in the envelope |
 | National Identity Number | Identifies the cardholder the card was produced for |
-| Card identifier read at the line | The value read from the card with its carrier after affixing, which is what proves the pairing |
+| Card identifier read at the line | The value read from the card, matched at affixing to the barcode on its carrier, which is what proves the pairing |
 | Destination | The registration office the mail piece is addressed to |
 | Dispatch batch | The batch the mail piece was grouped into for handover |
 | Tracking reference | The reference generated for the mail piece, used where a courier or postal operator applies one |
 | Time of release | When the mail piece completed verification and was released |
 
 The record is written from what the machine read, not from what the job intended. A mail piece
-released after the verification station confirmed the card against its carrier carries a record of
-that confirmation, and a mail piece diverted to the reject magazine does not produce a
+released after the affixing station matched the card to its carrier carries a record of that
+match, and a mail piece diverted to the reject magazine does not produce a
 dispatch record at all. The dispatch set is therefore a record of what physically exists, which is
 what allows it to be reconciled against the production job and against blank card stock.
 

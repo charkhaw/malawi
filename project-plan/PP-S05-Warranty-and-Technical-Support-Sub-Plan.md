@@ -105,7 +105,7 @@ remaining hours and does not stop production.
 
 | Activity | Frequency | Basis |
 |---|---|---|
-| Servicing of the personalization and mailing equipment: optics, cooling, feeders and card transport | At the equipment manufacturer's intervals | Manufacturer's maintenance schedule |
+| Servicing of the personalization and mailing equipment: optics, filtering system, feeders and card transport | At the equipment manufacturer's intervals | Manufacturer's maintenance schedule |
 | Laser calibration | At the manufacturer's intervals and when calibration logs show drift | System Architecture Section 3.8 |
 | Backup verification and restoration testing | On the backup schedule | System Architecture Section 12.3 |
 | Security patching | On a defined cycle, with critical patches applied out of cycle | System Architecture Section 10.5 |
@@ -143,7 +143,7 @@ of failure, since each of those requires a replacement unit on site.
 
 | Category | Held for |
 |---|---|
-| Printer specific components | Laser marking units and their optics, cooling, card feeders and transport, verification cameras and reject modules, and the feeders, inserters and carrier printers of the mailing systems |
+| Printer specific components | Laser marking units and their optics, the filtering system, card feeders and transport, verification cameras and reject modules, and the feeders, inserters and carrier printers of the mailing systems |
 | Encoding and laminating modules | None are fitted. The cards are chipless, the QR code is laser engraved, and there is no laminating stage |
 | Electronic and power spares | Industrial control PCs, power supplies, control boards and sensors of the equipment, and power supplies and drives of the ICT infrastructure |
 | Infrastructure spares | A replacement for every critical infrastructure component identified as a single point of failure in the Critical Spare Parts List, and spare drives for the storage array. Components deployed in pairs, including the core switches, the firewalls, and the controllers and power supplies of the storage array, are covered by their second unit while a replacement is obtained, and the hardware security module at the primary site by the module at the secondary site. Spares for the facility systems are held under the facility works |
