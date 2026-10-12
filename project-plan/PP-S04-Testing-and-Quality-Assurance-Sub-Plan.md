@@ -70,7 +70,7 @@ that the delegation arrives knowing what will be tested and what passing means.
 |---|---|
 | Laser personalization features | Laser engraved text, greyscale portrait, secondary image, micro-lettering, CLI, the QR code with both alphanumeric values, and tactile laser printing, all on the actual card body |
 | Marking resolution | Portrait at 600 dpi or higher in greyscale, and micro text at 600 dpi or higher at a line width and height of 0.33 mm, measured on the produced cards |
-| Independent laser stations | A station is switched off and taken out of operation during a run, and production continues without interruption |
+| Laser stations | The five stations, two for each face and one for the CLI. A station for one face is switched off and taken out of operation at the end of a run, and production resumes on the remaining stations once the job settings are reconfigured |
 | Throughput | The contractual rate in System Architecture Section 3.5, not less than 1,000 cards per hour on each personalization system, with the full personalization content |
 | Card recognition and verification | Recognition of the blank card body, X-Y alignment of front, back and CLI, in-line verification, rejection and in-job reproduction |
 | Calibration | Calibration of individual stations and of all stations together, with the audit log it produces |

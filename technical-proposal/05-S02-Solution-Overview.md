@@ -20,10 +20,8 @@ Production Facility, with a secondary environment at the Purchaser's disaster re
 | Monitoring and management | Production and machine health monitoring, environmental and consumable thresholds, alerting, performance analytics and reporting |
 
 **Production hardware.** Two automatic modular laser personalization systems and two automated
-mailing and dispatch systems. Each personalization line operates independently of the other, and each
-laser station within a line operates independently of the others, so that a station taken out of
-service does not interrupt production, and the loss of a whole line leaves production running on the
-other line.
+mailing and dispatch systems. Each personalization line operates independently of the other, so that
+while a machine is serviced, or if a whole line is lost, production continues on the other line.
 
 **External interfaces.** The System exchanges data across the following external boundaries:
 
@@ -58,7 +56,7 @@ event returned to NRIS at each defined point.
 | 7 | Each card is verified in line for print quality, engraving quality and correct machine-readable content, against the source record | Quality control completed |
 | 8 | Cards failing verification are rejected automatically and reported to the operator on screen. Reproduction takes place within the same job, and the rejected card is held for secure destruction | Card rejected |
 | 9 | Accepted cards are batched and transferred to a mailing line, where each card is identified by reading the machine-readable identifier engraved on it | None |
-| 10 | The personalized carrier letter is printed with the destination address and the dispatch reference, and the card is affixed. The machine reads the card and its carrier together and confirms they match, so that each card reaches the correct recipient | None |
+| 10 | The personalized carrier letter is printed with the destination address, the dispatch reference and a barcode of the card identifier. The machine reads the carrier's barcode and matches it to the card before affixing the card, so that each card reaches the correct recipient | None |
 | 11 | The carrier is folded and inserted into a window envelope, and the envelope is sealed | Card packaged |
 | 12 | Mail pieces are sorted by destination and released for dispatch to the registration office that ordered them | Card dispatched |
 | 13 | Arrival at the destination office is confirmed and the card is available for collection | Card delivered |

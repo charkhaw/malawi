@@ -307,7 +307,7 @@ is delivered.
 |---|---|---|
 | Day 1, morning | The personalization line: feeder, laser stations, verification, reject module and stacker; emergency stops and safe working; the Printer Controller Admin console | Walk the line at rest, locate every emergency stop, and identify each module and its status on the console |
 | Day 1, afternoon | Blank card stock: issue against serial numbers, loading the feeder, returning unused blanks; selecting a prepared batch and assigning it to a line | Issue blanks to a training job, load them, assign the job to a line and start it |
-| Day 2, morning | Monitoring production: batch progress, line status and reject reasons; a laser station taken out of service mid-batch; assisting calibration | Take a station out of service during a run and confirm production continues on the others; read the calibration log |
+| Day 2, morning | Monitoring production: batch progress, line status and reject reasons; taking a laser station out of service between runs; assisting calibration | Take a station out of service at the end of a run, restart production with the job settings for the remaining stations, and read the calibration log |
 | Day 2, afternoon | Rejects and reconciliation: in-job reproduction, quarantine of rejected cards, closing a batch against its reconciliation; shift handover | Resolve a seeded reject, close the batch with every blank accounted for, and hand over to the next shift |
 
 At the end of the module the trainee performs each task in the operator's competence list on the
@@ -320,7 +320,7 @@ operator:
 |---|---|
 | Issue blank cards to a job and load the feeder | Every blank issued against its serial number, and the count agrees with the job |
 | Assign a prepared batch to a line and start production | Correct batch on the correct line, started without assistance |
-| Respond to a laser station out of service | Production continues on the remaining stations, and the event is reported to the supervisor |
+| Respond to a laser station out of service | The run is concluded, production resumes on the remaining stations or on the other line, and the event is reported to the supervisor |
 | Handle a rejected card | Card quarantined against its serial number, and its reproduction confirmed within the job |
 | Close a batch | Closed only with every blank accounted for, and any discrepancy raised |
 | Stop the line safely | Emergency stop reached and operated from the working position, and the restart follows the procedure |

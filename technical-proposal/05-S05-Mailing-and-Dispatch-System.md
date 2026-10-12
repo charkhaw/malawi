@@ -14,9 +14,9 @@ Each line comprises:
 | Card input hopper | Holds personalized cards for continuous production |
 | Card reading station | Reads the machine-readable identifier engraved on each card |
 | Fully integrated card transport modules | Move cards from hopper to affixing station under positional control |
-| Carrier printing station | Prints the personalized carrier letter, including the destination address and the dispatch reference |
-| Card affixing station | Attaches one to four cards to the carrier |
-| Verification station | Reads the card and its carrier together after affixing and confirms that they match |
+| Carrier printing station | Prints the personalized carrier letter, including the destination address, the dispatch reference and a barcode of the card identifier |
+| Card affixing station | Reads the barcode on the carrier, matches it to the card, and attaches one to four cards to the carrier |
+| Attachment check | Confirms that each card is physically attached to its carrier |
 | Folding station | Folds the carrier to suit the envelope |
 | Inserting module | Conveys the folded document into the envelope |
 | Sealing station | Seals the envelope. The address and dispatch reference printed on the carrier show through the envelope window |
@@ -31,13 +31,14 @@ itself rather than from the order in which cards were loaded.
 
 ![Mailing line](../images/Figure-5-1-Mailing-Line.png)
 
-*Figure 5.1: Mailing line. Each card is read against the job data before its carrier is printed, and
-read again with its carrier after affixing, before the mail piece is folded and inserted.*
+*Figure 5.1: Mailing line. Each card is read against the job data before its carrier is printed with
+the card's barcode. At the affixing station the carrier's barcode is read and matched to the card,
+and the card is attached only on a match.*
 
 ## 5.2 Carrier letter printing and card affixing
 
-The carrier letter is printed at the line, personalized to the recipient, immediately before the card
-is attached. Printing and affixing in the same pass is what allows the carrier to be matched to the
+The carrier letter is printed at the line, personalized to the recipient and carrying a barcode of
+the card identifier, immediately before the card is attached. Printing and affixing in the same pass is what allows the carrier to be matched to the
 card by data rather than by sequence.
 
 **One to four cards per carrier.** The system attaches between one and four cards to a single carrier
@@ -48,7 +49,7 @@ configurations according to the envelope in use.
 
 ## 5.3 Envelope insertion, sealing and address printing
 
-After the card is affixed and the match verified, the machine conveys the document automatically through the inserting
+After the card is affixed and its attachment checked, the machine conveys the document automatically through the inserting
 module into the envelope. No manual handling occurs between affixing and insertion.
 
 The envelope is then sealed. The destination address and the dispatch reference are printed on the
@@ -67,16 +68,17 @@ data supplied for the batch, which pairs each identifier with the carrier conten
 prepared for it. Matching therefore requires no access to the contents of the digitally signed QR
 code, and does not depend on the order in which cards were loaded.
 
-Every card is read twice, and each reading is checked against the record the mail piece was built
-from: once at the reading station, before its carrier is printed, and again with its carrier after
-affixing. The second reading is the control that matters: it confirms that the card physically
-attached to the carrier is the card the carrier and the address were prepared for. Nothing separates
-the card from its carrier after that point.
+Each card is read at the reading station and matched to the job record before its carrier is
+printed, and from then on the line tracks the card by its identifier through every station. The
+carrier is printed with a barcode of that identifier. At the affixing station the barcode is read and
+matched to the card: on a match the card is attached, and on a mismatch the card and its carrier are
+both rejected. The attachment is then checked, and nothing separates the card from its carrier after
+that point. Every step takes place in a single pass of the line.
 
-This detects the failure modes that arise inside the machine after correct data has been supplied.
-A mis-feed, a double-feed or a card out of sequence produces a mail piece whose contents do not match
-its address, and no upstream system can see that, because upstream the pairing was correct. Reading
-the card and its carrier together after affixing is the point at which such a fault is caught.
+This catches the faults that arise inside the machine after correct data has been supplied, such as
+a carrier out of sequence, which would produce a mail piece whose contents do not match its address.
+No upstream system can see such a fault, because upstream the pairing was correct, so it is caught at
+the line, before the card is attached.
 
 Cards and carriers failing verification are diverted to the reject magazine rather than inserted.
 
