@@ -11,10 +11,10 @@ to remain licensed and supported.
 |---|---|---|---|
 | Windows Server Datacenter | Per physical core, with every core licensed and not fewer than 16 core licenses per host | 144 core licenses: the 2 application hosts at the primary site and the host at the secondary site, each of two 24-core processors | The server operating system and Hyper-V on those hosts, failover clustering of the application hosts, and every Windows Server virtual machine they run, including the domain controllers |
 | Windows Server Standard | Per physical core, with every core licensed and not fewer than 16 core licenses per host | 96 core licenses: the 2 database hosts at the primary site, each of two 24-core processors | The server operating system and Hyper-V on the database hosts, failover clustering of the database hosts, and the database virtual machine |
-| SQL Server Standard | Per virtual core, not fewer than four per virtual machine, with Software Assurance | The virtual cores allocated to the database virtual machine | The production database. The secondary copy at the secondary site is covered by the failover rights of Software Assurance |
+| SQL Server Standard | Per server, with client access licenses, and Software Assurance | One server license for the database virtual machine, with 120 client access licenses | The production database. The secondary copy at the secondary site is covered by the failover rights of Software Assurance |
 | SQL Server Developer | No license fee, for development and testing | The development, user acceptance testing and training environments | Non-production databases |
 | Windows desktop operating system | Per device, supplied with the workstation | 10 | The operator and administrative workstations |
-| Endpoint detection and response | Per endpoint | 34: the 5 hosts; 19 virtual machines, being the 14 production and 2 non-production virtual machines at the primary site, and the domain controller, the database copy and the Veeam server at the secondary site; and the 10 workstations. The standby copies at the secondary site run only in place of the virtual machines they copy | Endpoint protection and anti-malware |
+| Endpoint detection and response | Per endpoint | 33: the 5 hosts; 18 virtual machines, being the 14 production and 2 non-production virtual machines at the primary site, and the domain controller and the database copy at the secondary site; and the 10 workstations. The standby copies at the secondary site run only in place of the virtual machines they copy | Endpoint protection and anti-malware |
 | Privileged access management | Per privileged user | Every administrator and privileged account | Privileged access issued for a session and a purpose |
 | Multi-factor authentication | Per user | Every administrator and operator | Authentication of administrators and operators |
 | Vulnerability scanning | Per scanned asset | All hosts, virtual machines, network devices and workstations | Scheduled vulnerability scanning and compliance reporting |
@@ -28,7 +28,7 @@ to remain licensed and supported.
 The application hosts and the secondary host carry Windows Server Datacenter, because the edition
 licenses an unlimited number of Windows Server virtual machines on the host it covers: either
 application host runs every production virtual machine of the application cluster when the other is
-lost, together with the non-production environments, and the secondary host runs the eleven virtual
+lost, together with the non-production environments, and the secondary host runs the ten virtual
 machines of the secondary environment. The database hosts carry Windows Server Standard, which
 licenses two Windows Server virtual machines on each fully licensed host, more than the one database
 virtual machine either host runs.
@@ -78,7 +78,7 @@ together with their license terms, as described in System Architecture Section 6
 | License type | Coverage for three years from Operational Acceptance |
 |---|---|
 | Windows Server Datacenter and Standard | Perpetual licenses, with security and quality updates and support by the Supplier under Section 5 |
-| SQL Server Standard | Perpetual licenses with Software Assurance for three years, providing updates, license mobility between the database hosts, and failover rights for the secondary copy |
+| SQL Server Standard | Perpetual server license and 120 client access licenses, with Software Assurance for three years, providing updates, license mobility between the database hosts, and failover rights for the secondary copy |
 | Subscriptions: MDR / MSOC, security, operations, firewall, storage array and network device support, and the bulk SMS service | A subscription term of three years |
 | Equipment software | Support and updates from the equipment manufacturer for the warranty period |
 | Hardware security modules | Support and firmware updates for three years |

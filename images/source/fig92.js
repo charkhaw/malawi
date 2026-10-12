@@ -5,8 +5,7 @@
 // site; an encrypted backup repository beside the immutable backup storage at each site; the
 // secondary site runs one host on internal storage, without a storage array.
 // 12 October 2026: 384 GB on every host; one database virtual machine that fails over between the
-// database hosts; a load balancer pair at the primary site and one at the secondary site; a Veeam
-// server running at the secondary site.
+// database hosts; a load balancer pair at the primary site and one at the secondary site.
 const F = require("./figlib.js")(1400, 660, 17);
 
 // Primary
@@ -43,26 +42,25 @@ F.box(440, 570, 360, 50, ["Backup repository and immutable", "backup storage, 40
 // Secondary
 F.box(1000, 20, 380, 620, [], "double");
 F.text(1190, 50, ["PURCHASER'S DISASTER", "RECOVERY DATA CENTER"], { size: 15, weight: 700, spacing: 1 });
-F.box(1025, 92, 330, 298, [], "light");
+F.box(1025, 92, 330, 250, [], "light");
 F.text(1190, 112, ["Virtualization host (x1)"], { weight: 700, size: 16 });
 F.text(1190, 134, ["2 x 24 cores, 384 GB, internal storage", "not less than 20 TB usable after RAID"], { size: 13.5 });
 F.box(1045, 166, 290, 68, ["Standby copies of the service", "virtual machines, switched", "off until a failover"], "solid", { size: 14.5 });
 F.box(1045, 242, 290, 40, ["Database, secondary copy, running"], "solid", { size: 14.5 });
 F.box(1045, 290, 290, 40, ["Domain controller, running"], "solid", { size: 14.5 });
-F.box(1045, 338, 290, 40, ["Veeam server, running"], "solid", { size: 14.5 });
-F.box(1025, 404, 330, 52, ["Hardware security module,", "replicated from the primary site"], "grey", { size: 14.5 });
-F.box(1025, 468, 330, 60, ["Backup repository and immutable", "backup storage, offsite copies"], "grey", { size: 14.5 });
-F.box(1025, 540, 330, 50, ["Firewall, core switch and", "load balancer"], "grey", { size: 14.5 });
-F.text(1190, 614, ["No personalization or mailing equipment"], { size: 14, italic: true });
+F.box(1025, 356, 330, 52, ["Hardware security module,", "replicated from the primary site"], "grey", { size: 14.5 });
+F.box(1025, 420, 330, 60, ["Backup repository and immutable", "backup storage, offsite copies"], "grey", { size: 14.5 });
+F.box(1025, 492, 330, 50, ["Firewall, core switch and", "load balancer"], "grey", { size: 14.5 });
+F.text(1190, 588, ["No personalization or mailing", "equipment at this site"], { size: 15, italic: true });
 
 // Replication over the Government Wide Area Network
 F.line([[820, 200], [1045, 200]], { end: true });
 F.label(910, 172, ["Virtual machine", "replication"], "middle", { size: 14.5 });
 F.line([[820, 262], [1045, 262]], { end: true });
 F.label(910, 230, ["Database replication,", "lag 5 minutes or less"], "middle", { size: 14.5 });
-F.line([[800, 534], [950, 534], [950, 430], [1025, 430]], { end: true });
+F.line([[800, 534], [950, 534], [950, 382], [1025, 382]], { end: true });
 F.label(942, 470, ["Key replication"], "end", { size: 14 });
-F.line([[800, 595], [980, 595], [980, 498], [1025, 498]], { end: true });
+F.line([[800, 595], [980, 595], [980, 450], [1025, 450]], { end: true });
 F.label(905, 613, ["Backup replication"], "middle", { size: 14 });
 F.label(910, 316, ["encrypted, over the", "Government Wide", "Area Network"], "middle", { size: 14, italic: true });
 

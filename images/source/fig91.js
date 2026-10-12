@@ -6,7 +6,7 @@
 // 9 October 2026: security monitoring runs on three virtual machines.
 // 12 October 2026: load balancers become a pair of appliances, the database runs on one virtual
 // machine, security monitoring runs on four virtual machines for the MDR / MSOC service, and the
-// secondary site runs a Veeam server and a load balancer appliance.
+// secondary site has a load balancer appliance.
 
 // Bands, top to bottom: zones above the firewall, the firewall pair, production zones,
 // infrastructure zones, platform, legend.
@@ -31,7 +31,7 @@ F.box(250, 40, 530, 50, ["Government Wide Area Network"], "double");
 F.line([[180, 65], [250, 65]]);
 F.box(940, 12, 440, 200, [], "double");
 F.text(1160, 34, ["Secondary environment,", "Purchaser's disaster recovery data center"], { size: 15.5 });
-F.box(962, 76, 210, 54, ["Host (x1): standby services,", "database copy, Veeam"], "grey", { size: 14 });
+F.box(962, 76, 210, 54, ["Host (x1): standby", "services, database copy"], "grey", { size: 15 });
 F.box(1182, 76, 176, 54, ["Hardware security", "module, replicated"], "grey", { size: 15 });
 F.box(962, 142, 210, 54, ["Backup repository and", "immutable storage"], "grey", { size: 15 });
 F.box(1182, 142, 176, 54, ["Firewall, core switch,", "load balancer"], "grey", { size: 14 });
