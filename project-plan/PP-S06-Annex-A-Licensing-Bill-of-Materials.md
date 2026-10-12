@@ -9,7 +9,7 @@ to remain licensed and supported.
 
 | Title | License metric | Quantity | Serves |
 |---|---|---|---|
-| Windows Server Datacenter | Per physical core, with every core licensed and not fewer than 16 core licenses per host | 240 core licenses: 5 hosts of two 24-core processors, 4 at the primary site and 1 at the secondary site | The server operating system and Hyper-V on every host, failover clustering of the application hosts and of the database hosts, and the Windows Server virtual machines those hosts run, including the domain controllers |
+| Windows Server Datacenter | Per physical core, with every core licensed and not fewer than 16 core licenses per host | All physical cores of the 5 hosts, 4 at the primary site and 1 at the secondary site | The server operating system and Hyper-V on every host, failover clustering of the application hosts and of the database hosts, and the Windows Server virtual machines those hosts run, including the domain controllers |
 | Windows Server client access licenses | Per user | One for each person holding an account on the system | Access by users to the Windows Server estate |
 | SQL Server Standard | Per virtual core, not fewer than four per virtual machine, with Software Assurance | The virtual cores allocated to the active database node | The production database. The passive node at the primary site and the secondary copy at the secondary site are covered by the failover rights of Software Assurance |
 | SQL Server Developer | No license fee, for development and testing | The development, user acceptance testing and training environments | Non-production databases |
