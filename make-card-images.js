@@ -303,7 +303,8 @@ const doc = new Document({
       caption("Security features of the back, as described in System Architecture Section 4.3."),
       heading("Blank card under ultraviolet light, front and back"),
       figure("uv-front-back", CONTENT_MM),
-      caption("Invisible UV printing: the national emblem on the front, and the rising half-sun symbol on the back.", true),
+      caption("The same front and back under an ultraviolet lamp, which makes the whole card appear blue. The invisible UV " +
+              "printing glows: the national emblem on the front, and the rising half-sun symbol on the back.", true),
 
       /* page 4 */
       heading("Personalized card, front and back", true),
