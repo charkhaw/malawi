@@ -33,8 +33,6 @@ const OUT = path.join(__dirname, "attachments", "Sample-Card-Images.docx");
 const IMG = path.join(__dirname, "attachments", "sample-card-images");
 const TITLE = "Sample Card Images";
 const RFP_REF = "RFP No. MW-PPPC-546386-GO-RFB";
-const CONTRACT = "Provision of a Turnkey Solution for the Rehabilitation, Upgrading and Commissioning of the Central Printing Facility";
-const PROPOSER = "Joint Venture of RM Enterprise Limited and Inkript Securities S.A.L";
 const BLUE = "2F5496";
 const GREY = "404040";
 const RULE = "BFBFBF";
@@ -248,7 +246,7 @@ const doc = new Document({
       }),
     },
     children: [
-      /* page 1: what this is, what it answers, and where to find each image */
+      /* page 1: what this answers, and where to find each image */
       new Paragraph({ heading: HeadingLevel.TITLE, children: [run(TITLE)] }),
       new Paragraph({
         spacing: { after: 280 },
@@ -263,8 +261,6 @@ const doc = new Document({
         ],
       }),
       facts([
-        ["Proposer", PROPOSER],
-        ["Contract", CONTRACT + ", " + RFP_REF],
         ["Requirement", "Section VII, 3.4.5 Sample Card Images, requirement 3.4.5.1"],
         ["Referred to in", "System Architecture Section 4.7, and Technical Responsiveness Checklist row 3.4.5.1"],
       ]),
