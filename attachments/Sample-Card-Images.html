@@ -1,0 +1,112 @@
+<!doctype html>
+<!--
+  Attachment "Sample card images", cited by System Architecture Section 4.7 and
+  Technical Responsiveness Checklist row 3.4.5.1.
+
+  The PDF is this page printed from Chrome or Edge: A4, portrait, no headers
+  and footers, margins as set by the page ("Default"). The images are in
+  sample-card-images/ beside this file.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sample Card Images</title>
+<style>
+  @page { size: A4 portrait; margin: 15mm; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; color: #1a1a1a; }
+  body { font-family: Calibri, Carlito, "Liberation Sans", Arial, sans-serif; font-size: 10.5pt; line-height: 1.35; }
+  .page { position: relative; height: 266mm; page-break-after: always; break-after: page; }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+  header { border-bottom: 1.2pt solid #2F5496; padding-bottom: 4mm; margin-bottom: 5mm; }
+  h1 { font-size: 22pt; font-weight: 400; color: #2F5496; margin: 0 0 1mm; }
+  .tag { display: inline-block; font-size: 10pt; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+         color: #2F5496; border: 1pt solid #2F5496; border-radius: 2mm; padding: .4mm 2.2mm; margin-bottom: 2.5mm; }
+  .meta { margin: 0; color: #404040; }
+  .note { margin: 3mm 0 0; }
+  h2 { font-size: 13pt; font-weight: 400; color: #2F5496; margin: 0 0 2.5mm; }
+  section { margin-bottom: 6mm; }
+  figure { margin: 0; }
+  figure img { display: block; width: 100%; height: auto; }
+  .narrow img { width: 88%; margin: 0 auto; }
+  .pair { display: flex; gap: 6mm; }
+  .pair figure { flex: 1; }
+  .pair h3 { font-size: 11pt; font-weight: 700; margin: 0 0 1.5mm; }
+  figcaption { margin-top: 2mm; color: #404040; font-size: 9.5pt; }
+  footer { position: absolute; left: 0; right: 0; bottom: 0; border-top: .6pt solid #BFBFBF; padding-top: 1.5mm;
+           display: flex; justify-content: space-between; font-size: 8pt; color: #595959; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header>
+    <h1>Sample Card Images</h1>
+    <div class="tag">Sample design</div>
+    <p class="meta">Joint Venture of RM Enterprise Limited and Inkript Securities S.A.L</p>
+    <p class="meta">RFP No. MW-PPPC-546386-GO-RFB, Section VII, requirement 3.4.5.1</p>
+    <p class="note">The images show the blank card, front and back, and the personalized card, front and back,
+      with the security features marked. They are referred to in System Architecture Section 4.7 and in
+      Technical Responsiveness Checklist row 3.4.5.1. The final card layout and artwork are agreed with NRB
+      in the joint redesign described in Preliminary Project Plan Section 2.4.</p>
+  </header>
+
+  <section>
+    <h2>1. Blank card, front</h2>
+    <figure class="narrow">
+      <img src="sample-card-images/blank-front-features.png" alt="Blank card, front, with its security features marked">
+      <figcaption>Security features of the front, as described in System Architecture Section 4.2.</figcaption>
+    </figure>
+  </section>
+  <footer><span>Sample Card Images &nbsp;|&nbsp; Sample design</span><span>Page 1 of 3</span></footer>
+</div>
+
+<div class="page">
+  <section>
+    <h2>2. Blank card, back</h2>
+    <figure>
+      <img src="sample-card-images/blank-back-features.png" alt="Blank card, back, with its security features marked">
+      <figcaption>Security features of the back, as described in System Architecture Section 4.3.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>Blank card under ultraviolet light, front and back</h2>
+    <figure>
+      <img src="sample-card-images/uv-front-back.png" alt="Front and back of the blank card under ultraviolet light">
+      <figcaption>Invisible UV printing: the national emblem on the front, and the rising half-sun symbol on the back.</figcaption>
+    </figure>
+  </section>
+  <footer><span>Sample Card Images &nbsp;|&nbsp; Sample design</span><span>Page 2 of 3</span></footer>
+</div>
+
+<div class="page">
+  <section>
+    <h2>Personalized card, front and back</h2>
+    <div class="pair">
+      <figure>
+        <h3>3. Personalized card, front</h3>
+        <img src="sample-card-images/personalized-front.png" alt="Personalized card, front, with specimen data">
+      </figure>
+      <figure>
+        <h3>4. Personalized card, back</h3>
+        <img src="sample-card-images/personalized-back.png" alt="Personalized card, back, with specimen data">
+      </figure>
+    </div>
+    <figcaption>Laser personalization within the card body, shown with specimen data. Personalization features as
+      described in System Architecture Section 4.4.</figcaption>
+  </section>
+
+  <section>
+    <h2>Laser and tactile features of the front</h2>
+    <figure>
+      <img src="sample-card-images/laser-tactile-features.png" alt="CLI, tactile micro-text in relief text and deliberate error, and their place on the front">
+      <figcaption>Changing laser image (CLI), tactile micro-text in relief text and a deliberate error element (left),
+        and their position on the front artwork (right).</figcaption>
+    </figure>
+  </section>
+  <footer><span>Sample Card Images &nbsp;|&nbsp; Sample design</span><span>Page 3 of 3</span></footer>
+</div>
+
+</body>
+</html>
